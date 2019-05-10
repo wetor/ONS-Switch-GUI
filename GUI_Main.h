@@ -10,6 +10,8 @@
 
 
 
+
+
 class LayoutMenu : public pu::Layout
 {
 public:
@@ -32,6 +34,7 @@ class GUIMain : public pu::Application
 {
 public:
 	GUIMain();
+	void LoadConfig();
 private:
 	// Layout instance
 	LayoutMenu *layout_menu;

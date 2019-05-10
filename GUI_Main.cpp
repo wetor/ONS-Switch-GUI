@@ -7,22 +7,28 @@ using namespace std;
 
 LayoutMenu::LayoutMenu() {
 	
-	//menu = new pu::element::Menu(0, 30, 1280,pu::draw::Color(150, 150, 150, 200), ICON_SIZE, 690/240);
+	menu = new pu::element::Menu(0, 40, 1280, pu::draw::Color(150, 150, 150, 200), ICON_SIZE, 690 / ICON_SIZE);
 
 	int x = 0;
-	pu::element::Image* image;
-	vector<string> dirpath; 
+	//pu::element::Image* image;
+	pu::element::MenuItem *item;
+	vector<string> dirpath;
 	GetGameDir(PATH, dirpath);
-	for (int i = 0; i < dirpath.size();i++) {
+	for (int i = 0; i < dirpath.size(); i++) {
 		game_list.push_back(new GameInfo(dirpath[i]));
-		image = new pu::element::Image(x, 40, game_list[i]->GetIconPath(0));
-		image->SetWidth(ICON_SIZE);
-		image->SetHeight(ICON_SIZE);
+		//image = new pu::element::Image(x, 40, game_list[i]->GetIconPath(0));
+		item = new pu::element::MenuItem(game_list[i]->GetName());
+		item->SetIcon(game_list[i]->GetIconPath(0));
+		//image->SetWidth(ICON_SIZE);
+		//image->SetHeight(ICON_SIZE);
 		cout << game_list[i]->GetIconPath(0) << endl;
 		x += ICON_SIZE + 10;
-		game.push_back(image);
-		this->Add(image);
+		//game.push_back(image);
+		//this->Add(image);
+
+		menu->AddItem(item);
 	}
+	this->Add(menu);
 	
 
 	x = LEFT;
@@ -56,11 +62,18 @@ void LayoutMenu::Update() {
 
 
 GUIMain::GUIMain() {
+	LoadConfig();
 	layout_menu = new LayoutMenu();
-	cout << "01" << endl;
 	this->AddThread(std::bind(&LayoutMenu::Update, layout_menu));
-	cout << "02" << endl;
 	this->LoadLayout(layout_menu);
-	cout << "03" << endl;
 }
 
+void GUIMain::LoadConfig() {
+	WriteData();
+
+	
+
+	/*Load*/
+
+
+}
