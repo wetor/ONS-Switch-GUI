@@ -25,7 +25,6 @@ private:
 
 
 	pu::element::Menu *menu;
-	vector<pu::element::Image*> game;
 	vector<GameInfo*> game_list;
 
 };

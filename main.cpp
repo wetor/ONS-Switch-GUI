@@ -13,6 +13,7 @@ int main()
     // IMPORTANT! free the application to destroy allocated memory and to finalize graphics.
     delete gmain;
     // Exit
+
 	twiliExit();
     return 0;
 }

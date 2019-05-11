@@ -4,9 +4,10 @@
 #define		LEFT				8
 #define		TOP_2				40
 #define		TOP_3				( SCREEN_HEIGHT - 50 )
-#define		ICON_SIZE			210
-#define		ICON_NEAR_SIZE		300
-#define		ICON_SELECT_SIZE	360
+#define		ICON_SIZE			240
+#define		ICON_NUM			5
+//240 * 4  +  320 * 1  =  1280
+#define		ICON_SELECT_SIZE	320
 
 #define		PATH				"sdmc:/onsemu"
 #define		DATA_PATH			"sdmc:/onsemu/onsdata"
