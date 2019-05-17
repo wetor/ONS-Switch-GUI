@@ -1,5 +1,58 @@
 #include "GUI_Utils.h"
 
+
+void WriteDefaultConfig() 
+{
+	string fn = DATA_PATH;
+	fn += "/language.txt";
+	Config cfg;
+	cfg.setOptions(Config::OptionFsync
+		| Config::OptionSemicolonSeparators
+		| Config::OptionColonAssignmentForGroups
+		| Config::OptionOpenBraceOnSeparateLine);
+
+	Setting &root = cfg.getRoot();
+	Setting &langs = root.add("language", Setting::TypeGroup);
+	//-------------chinese-----------------------
+	Setting &lang0 = langs.add("chinese", Setting::TypeGroup);
+
+	lang0.add("txt_version", Setting::TypeString)	= TEXT_0_0;
+	lang0.add("btn_help", Setting::TypeString)		= TEXT_0_1;
+	lang0.add("btn_ok",	Setting::TypeString)		= TEXT_0_2;
+	lang0.add("btn_back", Setting::TypeString)		= TEXT_0_3;
+	lang0.add("btn_info", Setting::TypeString)		= TEXT_0_4;
+	lang0.add("btn_player",Setting::TypeString)		= TEXT_0_5;
+	lang0.add("btn_exit", Setting::TypeString)		= TEXT_0_6;
+	lang0.add("txt_nogame", Setting::TypeString)	= TEXT_0_7;
+
+	//-------------english-----------------------
+	Setting &lang1 = langs.add("english", Setting::TypeGroup);
+
+	lang1.add("txt_version", Setting::TypeString)	= TEXT_1_0;
+	lang1.add("btn_help", Setting::TypeString)		= TEXT_1_1;
+	lang1.add("btn_ok", Setting::TypeString)		= TEXT_1_2;
+	lang1.add("btn_back", Setting::TypeString)		= TEXT_1_3;
+	lang1.add("btn_info", Setting::TypeString)		= TEXT_1_4;
+	lang1.add("btn_player", Setting::TypeString)	= TEXT_1_5;
+	lang1.add("btn_exit", Setting::TypeString)		= TEXT_1_6;
+	lang1.add("txt_nogame", Setting::TypeString)	= TEXT_1_7;
+
+
+
+
+	cfg.writeFile(fn.c_str());
+
+}
+
+void ReadConfig(string file) 
+{
+
+
+
+}
+
+
+
 int GetGameDir(string path, vector<string>&list)
 {
 	DIR *dir;

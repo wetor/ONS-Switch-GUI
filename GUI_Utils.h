@@ -12,6 +12,12 @@
 #include <fstream>
 
 #include <switch.h>
+
+
+#include <map>
+#include <libconfig.h++>
+
+
 #include "GUI_define.h"
 
 #include "default_icon_png.h"
@@ -37,14 +43,17 @@
 #include "DOWN_png.h"
 
 using namespace std;
+using namespace libconfig;
+
+static map<string, string> text;
+
+
 struct data {
 	uint8_t * data;
 	int len;
 	string name;
 };
 static data onsdata[]{
-	{(uint8_t*)default_icon_png,default_icon_png_size,"default_icon.png"},
-	{(uint8_t*)default_font_ttf,default_font_ttf_size,"default_font.ttf"},
 	{(uint8_t*)A_png,A_png_size, "A.png"},
 	{(uint8_t*)B_png,B_png_size ,"B.png"},
 	{(uint8_t*)X_png,X_png_size, "X.png"},
@@ -60,30 +69,34 @@ static data onsdata[]{
 	{(uint8_t*)LEFT_png,LEFT_png_size,"LEFT.png" },
 	{(uint8_t*)UP_png,UP_png_size, "UP.png"},
 	{(uint8_t*)RIGHT_png,RIGHT_png_size, "RIGHT.png"},
-	{(uint8_t*)DOWN_png,DOWN_png_size ,"DOWN.png"}
+	{(uint8_t*)DOWN_png,DOWN_png_size ,"DOWN.png"},
+	{(uint8_t*)default_icon_png,default_icon_png_size,"default_icon.png"},
+	{(uint8_t*)default_font_ttf,default_font_ttf_size,"default_font.ttf"}
 };
-/*
-enum ns_key{
-	KEY_A,
-	KEY_B,
-	KEY_X,
-	KEY_Y,
-	KEY_LSTICK,
-	KEY_RSTICK,
-	KEY_L,
-	KEY_R,
-	KEY_ZL,
-	KEY_ZR,
-	KEY_PLUS,
-	KEY_MINUS,
-	KEY_DLEFT,
-	KEY_DUP,
-	KEY_DRIGHT,
-	KEY_DDOWN
-};*/
+
+enum ns_data{
+	OKEY_A,
+	OKEY_B,
+	OKEY_X,
+	OKEY_Y,
+	OKEY_LSTICK,
+	OKEY_RSTICK,
+	OKEY_L,
+	OKEY_R,
+	OKEY_ZL,
+	OKEY_ZR,
+	OKEY_PLUS,
+	OKEY_MINUS,
+	OKEY_DLEFT,
+	OKEY_DUP,
+	OKEY_DRIGHT,
+	OKEY_DDOWN,
+	DATA_ICON,
+	DATA_FONT
+};
 
 
-
+extern void WriteDefaultConfig();
 extern int GetGameDir(string path, vector<string> &dirpath);
 extern int GetGameIcon(string path, vector<string>&list);
 
