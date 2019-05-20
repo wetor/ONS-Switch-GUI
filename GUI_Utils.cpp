@@ -50,8 +50,32 @@ void ReadConfig(string file)
 
 
 }
+/*
+void WriteCmd(string file, vector<string> cmd_list) {
+	Config cfg;
+	cfg.setOptions(Config::OptionFsync
+		| Config::OptionSemicolonSeparators
+		| Config::OptionColonAssignmentForGroups
+		| Config::OptionOpenBraceOnSeparateLine);
 
+	cfg.readFile(file);
+	Setting &root = cfg.getRoot();
+	Setting &cmd = root.add("command", Setting::TypeGroup);
 
+}
+string ReadCmd(string path) {
+	string file = CMD_FILE;
+	file = path + "/" + file;
+	if (CheckFile(file) <= 0) {
+
+	}
+	
+}*/
+
+void RunGame(GameInfo *info) {
+	printf("Run Game :%s\n", info->GetPath().c_str());
+	/*RUN game*/
+}
 
 int GetGameDir(string path, vector<string>&list)
 {
@@ -64,7 +88,12 @@ int GetGameDir(string path, vector<string>&list)
 	}
 	while ((ptr = readdir(dir)) != NULL)
 	{
-		if (strcmp(ptr->d_name, "onsdata") == 0 || strcmp(ptr->d_name, ".") == 0 || strcmp(ptr->d_name, "..") == 0)    //current dir OR parrent dir
+		/*
+		temp	:	临时文件
+		media	:	视频文件
+		onsdata	:	配置文件
+		*/
+		if (strcmp(ptr->d_name, "temp") == 0 || strcmp(ptr->d_name, "media") == 0 || strcmp(ptr->d_name, "onsdata") == 0 || strcmp(ptr->d_name, ".") == 0 || strcmp(ptr->d_name, "..") == 0)    //current dir OR parrent dir
 			continue;
 		else if (ptr->d_type == 4)    //dir
 		{

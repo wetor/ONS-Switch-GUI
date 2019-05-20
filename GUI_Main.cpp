@@ -16,11 +16,17 @@ LayoutMenu::LayoutMenu() {
 	pu::element::MenuItem *item;
 	vector<string> dirpath;
 	GetGameDir(PATH, dirpath);
+
 	for (int i = 0; i < dirpath.size(); i++) {
-		game_list.push_back(new GameInfo(dirpath[i]));
+		GameInfo *info_tmp = new GameInfo(dirpath[i]);
+		game_list.push_back(info_tmp);
 		item = new pu::element::MenuItem(game_list[i]->GetName());
 		item->SetIcon(game_list[i]->GetIconPath(0));
-		cout << game_list[i]->GetIconPath(0) << endl;
+		string gamepath = this->game_list[i]->GetPath();
+		item->AddOnClick([info_tmp]() {
+			RunGame(info_tmp);
+		});
+		//cout << game_list[i]->GetIconPath(0) << endl;
 		x += ICON_SIZE + 10;
 		menu->AddItem(item);
 	}
@@ -66,10 +72,23 @@ LayoutMenu::LayoutMenu() {
 	pu::element::Image *image;
 	string path = DATA_PATH;
 	path += "/";
+	
+	//int w = BUTTON_HEIGHT + (BOTTOM_HEIGHT - BUTTON_HEIGHT) / 2;
+	//-----------------浏览框 左右 图标-------------------
+
+	image = new pu::element::Image(5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, path + onsdata[OKEY_DLEFT].name);
+	image->SetWidth(BUTTON_HEIGHT);
+	image->SetHeight(BUTTON_HEIGHT);
+	this->Add(image);
+
+	image = new pu::element::Image(SCREEN_WIDTH - BUTTON_HEIGHT - 5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, path + onsdata[OKEY_DRIGHT].name);
+	image->SetWidth(BUTTON_HEIGHT);
+	image->SetHeight(BUTTON_HEIGHT);
+	this->Add(image);
+	//-----------------下方按钮-------------------
+
 	x = LEFT;
 	y = BUTTON_BOTTOM;
-	//int w = BUTTON_HEIGHT + (BOTTOM_HEIGHT - BUTTON_HEIGHT) / 2;
-	
 
 	button_rect = new pu::element::Rectangle(0, BOTTOM, SCREEN_WIDTH, BOTTOM_HEIGHT, { 255,255,255,128 }, 0);
 	this->Add(button_rect);
@@ -116,7 +135,7 @@ LayoutMenu::LayoutMenu() {
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
 	//x += w;
-	R_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "播放器", { 0,0,0,255 }, { 255,255,255,48 });
+	R_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "资源查看", { 0,0,0,255 }, { 255,255,255,48 });
 	this->Add(R_button);
 	x += BUTTON_WIDTH + LEFT * 2;
 
@@ -127,7 +146,7 @@ LayoutMenu::LayoutMenu() {
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
 	//x += w;
-	PLUS_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "退出", { 0,0,0,255 }, { 255,255,255,48 });
+	PLUS_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "刷新", { 0,0,0,255 }, { 255,255,255,48 });
 	this->Add(PLUS_button);
 	x += BUTTON_WIDTH + LEFT * 2;
 }
@@ -144,16 +163,26 @@ void LayoutMenu::Update() {
 
 
 GUIMain::GUIMain() {
+	exit = false;
 	LoadConfig();
 	WriteDefaultConfig();
-	this->SetFPS(30);
+	this->SetFPS(60);
 	layout_menu = new LayoutMenu();
 	this->AddThread(std::bind(&LayoutMenu::Update, layout_menu));
 	this->LoadLayout(layout_menu);
 
 
-	this->SetOnInput([&](u64 Down, u64 Up, u64 Held, bool Touch)
+	this->SetOnInput([&](u64 Down, u64 Up, u64 Held, bool Touch) mutable
 	{
+		if (Down & KEY_PLUS) {
+			this->exit = true;
+			this->Close();
+			/*int opt = this->CreateShowDialog("确定要退出？", "", { "退出", "取消" }, true); // (using latest option as cancel option)
+			if(opt == 0)
+			{
+				
+			}*/
+		}
 		if (Down & KEY_X) // If A is pressed, start with our dialog questions!
 		{
 			int opt = this->CreateShowDialog("Question", "Do you like apples?", { "Yes!", "No...", "Cancel" }, true); // (using latest option as cancel option)

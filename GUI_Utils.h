@@ -19,7 +19,7 @@
 
 
 #include "GUI_define.h"
-
+#include "GUI_GameInfo.h"
 #include "default_icon_png.h"
 #include "default_font_ttf.h"
 
@@ -95,7 +95,7 @@ enum ns_data{
 	DATA_FONT
 };
 
-
+extern void RunGame(GameInfo *info);
 extern void WriteDefaultConfig();
 extern int GetGameDir(string path, vector<string> &dirpath);
 extern int GetGameIcon(string path, vector<string>&list);

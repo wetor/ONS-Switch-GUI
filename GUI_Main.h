@@ -44,8 +44,10 @@ class GUIMain : public pu::Application
 {
 public:
 	GUIMain();
+	bool isExit() { return exit; };
 	void LoadConfig();
 private:
+	bool exit;
 	// Layout instance
 	LayoutMenu *layout_menu;
 	
