@@ -40,40 +40,41 @@ LayoutMenu::LayoutMenu() {
 		this->Add(menu_text);
 	}
 
-
+	old_select = -1;
+	now_select = 0;
+	//-----------------------顶部栏--------------------------------
 	x = LEFT;
 
 	top_rect = new pu::element::Rectangle(0, 0, SCREEN_WIDTH, TOP_HEIGHT, { 255,255,255,128 }, 0);
 	this->Add(top_rect);
 
 	version_text = new pu::element::TextBlock(x, TOP, "Version: Alpha 0.1");
+	this->Add(version_text);
 
 	x += version_text->GetWidth() + LEFT * 2;
 	other_text = new pu::element::TextBlock(x, TOP, "中文测试？！@依旧AAAaaa#?!");
-	//other_text->SetFont(font);
-	//x += other_text->GetWidth() + 10;
-
-	battery_text = new pu::element::TextBlock(0, TOP, " 50%");
-	x = SCREEN_WIDTH - LEFT - battery_text->GetWidth();
-	battery_text->SetX(x);
-
-	time_text = new pu::element::TextBlock(0, TOP, "12:01");
-	x -= time_text->GetWidth() + LEFT * 2;
-	time_text->SetX(x);
-
-
-	this->Add(version_text);
 	this->Add(other_text);
-	this->Add(battery_text);
-	this->Add(time_text);
 
+	x = SCREEN_WIDTH - BATTERY_WIDTH - LEFT;
+	battery_rect = new pu::element::Rectangle(x, TOP / 2, BATTERY_WIDTH + 6, BATTERY_HEIGHT + 8, { 48,48,48,200 }, 0);
+	this->Add(battery_rect);
+	battery_bar = new pu::element::Rectangle(x + 3, TOP / 2 + 4, BATTERY_WIDTH, BATTERY_HEIGHT, { 0,220,0,255 }, 0);
+	this->Add(battery_bar);
+	battery_text = new pu::element::TextBlock(0, TOP, "100%");
+	x -= (LEFT + battery_text->GetWidth());
+	battery_text->SetX(x);
+	this->Add(battery_text);
+
+	x -= (100 + LEFT);
+	time_text = new pu::element::TextBlock(x, TOP, "00:00");
+	this->Add(time_text);
+	//-----------------------顶部栏 结束--------------------------------
 
 	
 	pu::element::Image *image;
 	string path = DATA_PATH;
 	path += "/";
 	
-	//int w = BUTTON_HEIGHT + (BOTTOM_HEIGHT - BUTTON_HEIGHT) / 2;
 	//-----------------浏览框 左右 图标-------------------
 
 	image = new pu::element::Image(5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, path + onsdata[OKEY_DLEFT].name);
@@ -93,66 +94,107 @@ LayoutMenu::LayoutMenu() {
 	button_rect = new pu::element::Rectangle(0, BOTTOM, SCREEN_WIDTH, BOTTOM_HEIGHT, { 255,255,255,128 }, 0);
 	this->Add(button_rect);
 
+
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_L].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	//x += w;
-	L_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "帮助", { 0,0,0,255 }, { 255,255,255,48 });
+	L_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, "游戏帮助", { 0,0,0,255 }, { 255,255,255,48 });
 	this->Add(L_button);
-	x += BUTTON_WIDTH + LEFT * 2;
 
-	
+	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_A].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	//x += w;
-	A_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "确认", { 0,0,0,255 }, {255,255,255,48});
+	A_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, "确认/开始", { 0,0,0,255 }, {255,255,255,48});
 	this->Add(A_button);
-	x += BUTTON_WIDTH + LEFT * 2;
+
+	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_B].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	//x += w;
-	B_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "返回", { 0,0,0,255 }, { 255,255,255,48 });
+	B_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, "返回/取消", { 0,0,0,255 }, { 255,255,255,48 });
 	this->Add(B_button);
-	x += BUTTON_WIDTH + LEFT * 2;
+
+	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_Y].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	//x += w;
-	Y_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "信息", { 0,0,0,255 }, { 255,255,255,48 });
+	Y_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, "详细信息", { 0,0,0,255 }, { 255,255,255,48 });
 	this->Add(Y_button);
-	x += BUTTON_WIDTH + LEFT * 2;
 
+	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
+	image = new pu::element::Image(x, y, path + onsdata[OKEY_X].name);
+	image->SetWidth(BUTTON_HEIGHT);
+	image->SetHeight(BUTTON_HEIGHT);
+	this->Add(image);
+	X_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, "资源查看", { 0,0,0,255 }, { 255,255,255,48 });
+	this->Add(X_button);
 
-
+	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_R].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	//x += w;
-	R_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "资源查看", { 0,0,0,255 }, { 255,255,255,48 });
+	R_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, "播放器", { 0,0,0,255 }, { 255,255,255,48 });
 	this->Add(R_button);
-	x += BUTTON_WIDTH + LEFT * 2;
 
 
-	x = SCREEN_WIDTH - LEFT - BUTTON_WIDTH ;
+
+	x = SCREEN_WIDTH - BUTTON_HEIGHT - LEFT - BUTTON_WIDTH / 2 ;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_PLUS].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	//x += w;
-	PLUS_button = new pu::element::Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, "刷新", { 0,0,0,255 }, { 255,255,255,48 });
+	PLUS_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH / 2, BUTTON_HEIGHT, "设置", { 0,0,0,255 }, { 255,255,255,48 });
 	this->Add(PLUS_button);
-	x += BUTTON_WIDTH + LEFT * 2;
+
+	x -= (BUTTON_WIDTH / 2 + BUTTON_HEIGHT + LEFT * 2);
+	image = new pu::element::Image(x, y, path + onsdata[OKEY_MINUS].name);
+	image->SetWidth(BUTTON_HEIGHT);
+	image->SetHeight(BUTTON_HEIGHT);
+	this->Add(image);
+	MINUS_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH / 2, BUTTON_HEIGHT, "重载", { 0,0,0,255 }, { 255,255,255,48 });
+	this->Add(MINUS_button);
 }
 
 
 void LayoutMenu::Update() {
+	
+	if (isEmpty())  goto common_update;
+	//--------------------当前选择变更------------------
+	now_select = menu->GetSelectedIndex();
+	if (old_select == now_select) goto common_update;
+
+
+
+	cout << "update:"<<game_list[now_select]->GetPath() << endl;
+
+	
+
+
+
+	old_select = now_select;
+	//--------------------全局更新------------------
+common_update:
+	time_text->SetText(GetCurrentTime(false));
+	int battery_value = GetBatteryLevel();
+	int battery_show = battery_value;
+	if (IsCharging())
+		battery_show = ((SDL_GetTicks() / 250) % 10 + 1) * 10;
+	battery_bar->SetWidth(battery_show * BATTERY_WIDTH / 100.0);
+
+	char *batterystr = new char[5];
+	sprintf(batterystr, "%d%%", battery_value);
+	battery_text->SetText(std::string(batterystr));
+	delete batterystr;
+
+
+
+	return;
 	//battery_text->SetText();
 	//time_text->SetText();
 }
@@ -174,7 +216,7 @@ GUIMain::GUIMain() {
 
 	this->SetOnInput([&](u64 Down, u64 Up, u64 Held, bool Touch) mutable
 	{
-		if (Down & KEY_PLUS) {
+		if (Down & KEY_MINUS) {
 			this->exit = true;
 			this->Close();
 			/*int opt = this->CreateShowDialog("确定要退出？", "", { "退出", "取消" }, true); // (using latest option as cancel option)

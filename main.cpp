@@ -5,6 +5,7 @@
 int main()
 {
 	twiliInitialize();
+	psmInitialize();
     // Create the application
     GUIMain *gmain = new GUIMain();
     // Show it. This function will finalize when the application's "Close()" function is called.

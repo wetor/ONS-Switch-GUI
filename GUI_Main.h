@@ -14,9 +14,18 @@ class LayoutMenu : public pu::Layout
 {
 public:
 	LayoutMenu();
+	bool isEmpty() { return game_list.empty(); }
 	void Update();
 private:
+	int old_select, now_select;
+
+
+	vector<GameInfo*> game_list;
 	pu::render::NativeFont font;
+
+
+	pu::element::Rectangle *battery_bar;
+	pu::element::Rectangle *battery_rect;
 
 	pu::element::TextBlock *version_text;
 	pu::element::TextBlock *time_text;
@@ -25,7 +34,7 @@ private:
 	pu::element::TextBlock *menu_text;
 
 	pu::element::MenuEX *menu;
-	vector<GameInfo*> game_list;
+	
 
 	pu::element::Rectangle *top_rect;
 	pu::element::Rectangle *button_rect;
@@ -34,9 +43,12 @@ private:
 	pu::element::Button *B_button;//取消
 	//pu::element::Button *X_button;
 	pu::element::Button *Y_button;//查看信息
-	pu::element::Button *L_button;
-	pu::element::Button *R_button;
-	pu::element::Button *PLUS_button;//退出
+	pu::element::Button *L_button;//帮助
+	pu::element::Button *X_button;//资源查看
+	pu::element::Button *R_button;//播放器
+	pu::element::Button *PLUS_button;//设置
+	pu::element::Button *MINUS_button;//重载
+	
 
 };
 

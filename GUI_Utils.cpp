@@ -217,3 +217,35 @@ void WriteData() {
 			
 	}
 }
+
+string GetCurrentTime(bool second)
+{
+	time_t timet = time(NULL);
+	struct tm *times = localtime((const time_t*)&timet);
+	int h = times->tm_hour;
+	int min = times->tm_min;
+	int s = times->tm_sec;
+	char timestr[9];
+	if (second) {
+		sprintf(timestr, "%02d:%02d:%02d", h, min, s);
+	}
+	else
+	{
+		sprintf(timestr, "%02d:%02d", h, min);
+	}
+	return std::string(timestr);
+}
+
+int GetBatteryLevel()
+{
+	uint bat = 0;
+	psmGetBatteryChargePercentage(&bat);
+	return (int)bat;
+}
+
+bool IsCharging()
+{
+	ChargerType charger = ChargerType_None;
+	psmGetChargerType(&charger);
+	return (charger > ChargerType_None);
+}

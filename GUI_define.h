@@ -7,8 +7,11 @@
 #define		BOTTOM				( SCREEN_HEIGHT - BOTTOM_HEIGHT )
 
 #define		BUTTON_HEIGHT		32
-#define		BUTTON_WIDTH		180
+#define		BUTTON_WIDTH		120
 #define		BUTTON_BOTTOM		( SCREEN_HEIGHT - BUTTON_HEIGHT - 4)
+
+#define		BATTERY_WIDTH		42
+#define		BATTERY_HEIGHT		24
 
 #define		ICON_SIZE			200
 #define		ICON_NUM			7

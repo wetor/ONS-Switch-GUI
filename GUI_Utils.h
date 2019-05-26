@@ -104,8 +104,15 @@ extern bool CheckScript(string path);
 extern int CheckFile(string path);
 extern bool CheckDir(string path);
 
+
+
 extern bool CopyFile(string Source, string Dest);
 extern bool CreateDir(string path);
 extern bool WriteFile(string path, uint8_t *data, int len);
 
 extern void WriteData();
+
+
+extern string GetCurrentTime(bool second = false);
+extern int GetBatteryLevel();
+extern bool IsCharging();
