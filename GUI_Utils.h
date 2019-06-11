@@ -45,7 +45,7 @@
 using namespace std;
 using namespace libconfig;
 
-static map<string, string> text;
+static map<string, string> text;	//language
 
 
 struct data {
@@ -94,6 +94,7 @@ enum ns_data{
 	DATA_ICON,
 	DATA_FONT
 };
+
 
 
 extern void RunGame(GameInfo *info);

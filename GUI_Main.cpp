@@ -223,6 +223,7 @@ GUIMain::GUIMain() {
 	{
 		if (Down & KEY_MINUS) {
 			this->Close();
+			loop_exit = true;
 			/*int opt = this->CreateShowDialog("确定要退出？", "", { "退出", "取消" }, true); // (using latest option as cancel option)
 			if(opt == 0)
 			{

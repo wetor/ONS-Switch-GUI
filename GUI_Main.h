@@ -8,7 +8,7 @@
 #include "GUI_Utils.h"
 #include "GUI_GameInfo.h"
 
-
+extern bool loop_exit;
 
 class LayoutMenu : public pu::Layout
 {
