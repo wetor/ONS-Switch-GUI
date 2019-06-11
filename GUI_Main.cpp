@@ -2,6 +2,11 @@
 
 using namespace std;
 
+
+
+
+
+
 LayoutMenu::LayoutMenu() {
 
 	//font = pu::render::LoadFont("sdmc:/onsemu/yuanzhikong/default.ttf", 25);
@@ -23,7 +28,7 @@ LayoutMenu::LayoutMenu() {
 		item = new pu::element::MenuItem(game_list[i]->GetName());
 		item->SetIcon(game_list[i]->GetIconPath(0));
 		string gamepath = this->game_list[i]->GetPath();
-		item->AddOnClick([info_tmp]() {
+		item->AddOnClick([info_tmp]() {					//RunGame
 			RunGame(info_tmp);
 		});
 		//cout << game_list[i]->GetIconPath(0) << endl;
@@ -205,19 +210,18 @@ common_update:
 
 
 GUIMain::GUIMain() {
-	exit = false;
+	
 	LoadConfig();
 	WriteDefaultConfig();
+
 	this->SetFPS(60);
 	layout_menu = new LayoutMenu();
 	this->AddThread(std::bind(&LayoutMenu::Update, layout_menu));
 	this->LoadLayout(layout_menu);
 
-
 	this->SetOnInput([&](u64 Down, u64 Up, u64 Held, bool Touch) mutable
 	{
 		if (Down & KEY_MINUS) {
-			this->exit = true;
 			this->Close();
 			/*int opt = this->CreateShowDialog("确定要退出？", "", { "退出", "取消" }, true); // (using latest option as cancel option)
 			if(opt == 0)
@@ -246,7 +250,7 @@ GUIMain::GUIMain() {
 			}
 		}
 	});
-
+	printf("0006\n");
 
 
 }

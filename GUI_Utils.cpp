@@ -1,6 +1,5 @@
 #include "GUI_Utils.h"
 
-
 void WriteDefaultConfig() 
 {
 	string fn = DATA_PATH;
@@ -72,11 +71,6 @@ string ReadCmd(string path) {
 	
 }*/
 
-void RunGame(GameInfo *info) {
-	printf("Run Game :%s\n", info->GetPath().c_str());
-	/*RUN game*/
-}
-
 int GetGameDir(string path, vector<string>&list)
 {
 	DIR *dir;
@@ -89,11 +83,12 @@ int GetGameDir(string path, vector<string>&list)
 	while ((ptr = readdir(dir)) != NULL)
 	{
 		/*
+		exefs	:	模块文件
 		temp	:	临时文件
 		media	:	视频文件
 		onsdata	:	配置文件
 		*/
-		if (strcmp(ptr->d_name, "temp") == 0 || strcmp(ptr->d_name, "media") == 0 || strcmp(ptr->d_name, "onsdata") == 0 || strcmp(ptr->d_name, ".") == 0 || strcmp(ptr->d_name, "..") == 0)    //current dir OR parrent dir
+		if (strcmp(ptr->d_name, "exefs") == 0 || strcmp(ptr->d_name, "temp") == 0 || strcmp(ptr->d_name, "media") == 0 || strcmp(ptr->d_name, "onsdata") == 0 || strcmp(ptr->d_name, ".") == 0 || strcmp(ptr->d_name, "..") == 0)    //current dir OR parrent dir
 			continue;
 		else if (ptr->d_type == 4)    //dir
 		{
@@ -232,6 +227,24 @@ string GetCurrentTime(bool second)
 	else
 	{
 		sprintf(timestr, "%02d:%02d", h, min);
+	}
+	return std::string(timestr);
+}
+string GetCurrentDate(bool isyear)
+{
+	time_t timet = time(NULL);
+	struct tm *times = localtime((const time_t*)&timet);
+	int year = 1900 + times->tm_year;
+	int mon = 1 + times->tm_mon;
+	int day = times->tm_mday;
+	char timestr[9];
+	if (isyear) {
+		sprintf(timestr, "%02d-%02d-%02d", year, mon, day);
+		//2019-6-11 18:56:32
+	}
+	else
+	{
+		sprintf(timestr, "%02d-%02d", mon, day);
 	}
 	return std::string(timestr);
 }

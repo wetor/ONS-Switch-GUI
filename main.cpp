@@ -1,25 +1,42 @@
 #include "GUI_Main.h"
 #include <switch.h>
 #include <twili.h>
-// Main entrypoint, call the app here
-int main()
+
+GUIMain *gmain;
+
+void RunGame(GameInfo *info) {
+	printf("Run Game :%s\n", info->GetPath().c_str());
+	/*RUN game*/
+	envSetNextLoad(info->GetPath().c_str(), (info->GetPath() + " " + info->GetPath()).c_str());
+	info->SetStartTime(GetCurrentDate() + " " + GetCurrentTime());
+
+	/*Write StartUp Info*/
+
+	gmain->Close();
+	delete gmain;
+	twiliExit();
+	exit(0);
+
+}
+
+
+int main(int argc , char *argv[])
 {
 	twiliInitialize();
+
+
 	psmInitialize();
-    // Create the application
-    GUIMain *gmain = new GUIMain();
-    // Show it. This function will finalize when the application's "Close()" function is called.
+
+    gmain = new GUIMain();
 	gmain->Show();
 	while (true) 
 	{
 		SDL_Delay(20);
-		if (gmain->isExit())
-			break;
 	}
-    // IMPORTANT! free the application to destroy allocated memory and to finalize graphics.
-    delete gmain;
-    // Exit
 
+
+
+    delete gmain;
 	twiliExit();
     return 0;
 }

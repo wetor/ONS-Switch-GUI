@@ -95,6 +95,7 @@ enum ns_data{
 	DATA_FONT
 };
 
+
 extern void RunGame(GameInfo *info);
 extern void WriteDefaultConfig();
 extern int GetGameDir(string path, vector<string> &dirpath);
@@ -114,5 +115,6 @@ extern void WriteData();
 
 
 extern string GetCurrentTime(bool second = false);
+extern string GetCurrentDate(bool isyear = true);
 extern int GetBatteryLevel();
 extern bool IsCharging();

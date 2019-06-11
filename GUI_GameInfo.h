@@ -11,16 +11,15 @@ public:
 	string GetPath() { return game_path; };
 	string GetName() { return name; };
 	bool GetComplete() { return complete; };
-	string GetIconPath(int index) { return icon_path.size() == 0 ? DEFAULT_ICON : (index >= icon_path.size() ? DEFAULT_ICON : icon_path[index]); };
+	string GetIconPath(int index);
+	void SetStartTime(string time) { start_time = time; };
+	string GetStartTime() { return start_time; };
 private:
 	bool complete;
 	string game_path;
 	string name;
 	string cmd;
 	vector<string> icon_path;
-
-	
-
-
+	string start_time;
 
 };

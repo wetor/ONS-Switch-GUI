@@ -49,12 +49,12 @@ EXEFS_SRC	:=	exefs_src
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
 
-CFLAGS	:=	-g -O2 -fpermissive -ffunction-sections -w \
-			$(ARCH) $(DEFINES)
+CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
+			$(ARCH) $(DEFINES) $(CFLAGS)
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DSWITCH
 
-CXXFLAGS	:= $(CFLAGS) -fexceptions -std=gnu++11
+CXXFLAGS	:= $(CFLAGS) -fexceptions -fpermissive  -std=gnu++11
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
