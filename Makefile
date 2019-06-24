@@ -38,9 +38,9 @@ APP_VERSION := Test
 # ICON := Icon.jpg
 TARGET		:=	ONS-Switch-GUI
 BUILD		:=	build
-SOURCES		:=	.
+SOURCES		:=	source
 DATA		:=	data
-INCLUDES	:=	.
+INCLUDES	:=	include Plutonium/Plutonium/Include
 EXEFS_SRC	:=	exefs_src
 # ROMFS		:=	RomFs
 
@@ -59,7 +59,9 @@ CXXFLAGS	:= $(CFLAGS) -fexceptions -fpermissive  -std=gnu++11
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -ltwili -lpu -lconfig++ -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2 -lEGL -lGLESv2 -lglapi -ldrm_nouveau -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs` -lnx
+LIBS	:= -ltwili -lpu -lconfig++ -lfreetype \
+			-lSDL2_ttf -lSDL2_gfx -lSDL2_image -lwebp -lSDL2 -lEGL -lGLESv2 -lglapi -ldrm_nouveau \
+			-lpng -ljpeg `sdl2-config --libs` `freetype-config --libs` -lnx
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -67,7 +69,7 @@ LIBS	:= -ltwili -lpu -lconfig++ -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -l
 #---------------------------------------------------------------------------------
 
 # IMPORTANT! Change "$(CURDIR)/../../Plutonium/Output" to the path in which you have Plutonium libs.
-LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(DEVKITPRO)/portlibs/switch/include/pu
+LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(CURDIR)/Plutonium/Plutonium/Output
 
 
 #---------------------------------------------------------------------------------
@@ -153,6 +155,7 @@ all: $(BUILD)
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) -C Plutonium/Plutonium/
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------

@@ -1,8 +1,0 @@
-
-
-
-
-	void targetNro(const char *path, const char *argv);
-
-
-
