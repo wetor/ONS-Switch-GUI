@@ -68,17 +68,17 @@ int main(int argc , char *argv[])
 	if (R_FAILED(svcSetHeapSize(&ghaddr, 0x10000000))) exit(1);
 	fake_heap_end = (char*)ghaddr + 0x10000000;
 
-	if (R_FAILED(appletInitialize()))	printf("test00\n");
-	if (R_FAILED(hidInitialize()))		printf("test01\n");
-	if (R_FAILED(accountInitialize()))	printf("test02\n");
-	if (R_FAILED(ncmInitialize()))		printf("test03\n");
-	if (R_FAILED(nsInitialize()))		printf("test04\n");
-	if (R_FAILED(psmInitialize()))		printf("test05\n");
-	if (R_FAILED(setInitialize()))		printf("test06\n");
-	if (R_FAILED(setsysInitialize()))	printf("test07\n");
-	if (R_FAILED(splInitialize()))		printf("test08\n");
-	if (R_FAILED(bpcInitialize()))		printf("test09\n");
-	if (R_FAILED(nifmInitialize()))		printf("test10\n");
+	if (R_FAILED(appletInitialize()))	printf("applet error!\n");
+	if (R_FAILED(hidInitialize()))		printf("hid error!\n");
+	if (R_FAILED(accountInitialize()))	printf("account error!\n");
+	if (R_FAILED(ncmInitialize()))		printf("ncm error!\n");
+	if (R_FAILED(nsInitialize()))		printf("ns error!\n");
+	if (R_FAILED(psmInitialize()))		printf("psm error!\n");
+	if (R_FAILED(setInitialize()))		printf("set error!\n");
+	if (R_FAILED(setsysInitialize()))	printf("setsys error!\n");
+	if (R_FAILED(splInitialize()))		printf("spl error!\n");
+	if (R_FAILED(bpcInitialize()))		printf("bpc error!\n");
+	if (R_FAILED(nifmInitialize()))		printf("nifm error!\n");
 
 
     gmain = new GUIMain();

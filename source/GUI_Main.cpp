@@ -12,7 +12,7 @@ LayoutMenu::LayoutMenu() {
 	//font = pu::render::LoadFont("sdmc:/onsemu/yuanzhikong/default.ttf", 25);
 	//printf("load 1 font %d\n", font != NULL);
 
-	pu::render::SetGlobalFont(pu::render::SharedFont::ChineseSimplified);
+	pu::render::SetDefaultFontFromShared(pu::render::SharedFont::ChineseSimplified);
 	
 
 	menu = new pu::element::MenuEX(0, TOP_HEIGHT, SCREEN_WIDTH, pu::draw::Color(150, 150, 150, 200), ICON_SIZE, ICON_SELECT_SIZE, ICON_NUM);
@@ -208,14 +208,12 @@ common_update:
 
 
 
-
-
 GUIMain::GUIMain() {
 	
 	LoadConfig();
 	WriteDefaultConfig();
 
-	this->SetFPS(60);
+	//this->SetFPS(60);
 	layout_menu = new LayoutMenu();
 	this->AddThread(std::bind(&LayoutMenu::Update, layout_menu));
 	this->LoadLayout(layout_menu);

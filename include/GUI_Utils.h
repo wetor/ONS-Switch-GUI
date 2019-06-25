@@ -25,7 +25,6 @@
 #include "default_font_ttf.h"
 
 
-
 #include "A_png.h"
 #include "B_png.h"
 #include "X_png.h"
@@ -50,12 +49,12 @@ extern int language;
 extern map<string, string> text;	//language
 
 
-struct data {
+struct data_t {
 	uint8_t * data;
-	int len;
+	uint32_t len;
 	string name;
 };
-static data onsdata[]{
+static data_t onsdata[]{
 	{(uint8_t*)A_png,A_png_size, "A.png"},
 	{(uint8_t*)B_png,B_png_size ,"B.png"},
 	{(uint8_t*)X_png,X_png_size, "X.png"},
