@@ -10,20 +10,25 @@
 
 extern bool loop_exit;
 
-class LayoutMenu : public pu::Layout
+
+class LayoutWindow : public pu::Layout
 {
 public:
-	LayoutMenu();
+	LayoutWindow();
 	bool isEmpty() { return game_list.empty(); }
 	void Update();
+	void ShowHelp(bool is_show);
+	bool isShowHelp(){ return is_show_help; }
 private:
 	int old_select, now_select;
 
 
 	vector<GameInfo*> game_list;
-	pu::render::NativeFont font;
 
 
+/* 主页面 */
+
+	
 	pu::element::Rectangle *battery_bar;
 	pu::element::Rectangle *battery_rect;
 
@@ -39,16 +44,42 @@ private:
 	pu::element::Rectangle *top_rect;
 	pu::element::Rectangle *button_rect;
 
-	pu::element::Button *A_button;//ȷ��
-	pu::element::Button *B_button;//ȡ��
-	//pu::element::Button *X_button;
-	pu::element::Button *Y_button;//�鿴��Ϣ
-	pu::element::Button *L_button;//����
-	pu::element::Button *X_button;//��Դ�鿴
-	pu::element::Button *R_button;//������
-	pu::element::Button *PLUS_button;//����
-	pu::element::Button *MINUS_button;//����
+	pu::element::Button *A_button;
+	pu::element::Button *B_button;
+	pu::element::Button *Y_button;
+	pu::element::Button *L_button;
+	pu::element::Button *X_button;
+	pu::element::Button *R_button;
+	pu::element::Button *PLUS_button;
+	pu::element::Button *MINUS_button;
+
+	/*帮助窗口 左侧 半屏幕*/
+	bool is_show_help = false;
+	vector<pu::element::Element *> help_elms;
+
+	pu::element::Rectangle *help_window;
+	pu::element::Rectangle *help_window_rect;
+	vector<pu::element::Image *> help_images;
+	vector<pu::element::TextBlock *> help_texts;
+	pu::element::Button *help_button;
+
 	
+
+
+
+	/*设置窗口 */
+	pu::element::Rectangle *window_setting;
+};
+
+
+
+
+
+class LayoutHelp : public pu::Layout
+{
+public:
+	LayoutHelp();
+private:
 
 };
 
@@ -60,7 +91,7 @@ public:
 private:
 
 	// Layout instance
-	LayoutMenu *layout_menu;
-	
+
+	LayoutWindow *layout_window;
 };
 

@@ -60,9 +60,10 @@ ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 LIBS	:= -ltwili -lconfig++ \
-		-lpu -lfreetype -lSDL2_mixer -lmodplug -lmpg123 -lvorbisidec -logg \
-		-lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2 -lEGL -lGLESv2 -lglapi -ldrm_nouveau \
-		-lwebp -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs` -lnx \
+		-lpu -lfreetype -lSDL2_mixer -lopusfile -lopus \
+		-lmodplug -lmpg123 -lvorbisidec -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2 \
+		-lEGL -lGLESv2 -lglapi -ldrm_nouveau -lwebp -lpng -ljpeg \
+		`sdl2-config --libs` `freetype-config --libs` -lnx
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

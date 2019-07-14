@@ -16,6 +16,11 @@
 #define		ICON_SIZE			200
 #define		ICON_NUM			7
 #define		ICON_SELECT_SIZE	280
+
+
+
+#define     WINDOW_WIDTH        ( SCREEN_WIDTH / 3 )
+#define     WINDOW_HEIGHT       ( SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT )
 //┏━━━━━━━━━━━━━━━━━━━━┓
 //┣━━━━━━━━━━━━━━━━━━━━┫
 //┃─┐┌─┐┌─┐┌──┐┌─┐┌─┐┌─┃

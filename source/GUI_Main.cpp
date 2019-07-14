@@ -3,17 +3,9 @@
 using namespace std;
 
 
+LayoutWindow::LayoutWindow(){
 
 
-
-
-LayoutMenu::LayoutMenu() {
-
-	//font = pu::render::LoadFont("sdmc:/onsemu/yuanzhikong/default.ttf", 25);
-	//printf("load 1 font %d\n", font != NULL);
-
-	pu::render::SetDefaultFontFromShared(pu::render::SharedFont::ChineseSimplified);
-	
 
 	menu = new pu::element::MenuEX(0, TOP_HEIGHT, SCREEN_WIDTH, pu::draw::Color(150, 150, 150, 200), ICON_SIZE, ICON_SELECT_SIZE, ICON_NUM);
 
@@ -37,7 +29,7 @@ LayoutMenu::LayoutMenu() {
 	}
 	this->Add(menu);
 	if (dirpath.empty()) {
-		menu_text = new pu::element::TextBlock(0, 0, "Not found ONS-Game. Please put ONS-Game-Directory in sdmc:/onsemu/ .");
+		menu_text = new pu::element::TextBlock(0, 0, text["txt_noname"]);
 		x =(SCREEN_WIDTH - menu_text->GetWidth()) / 2;
 		menu_text->SetX(x);
 		x = (SCREEN_HEIGHT - menu_text->GetHeight()) / 2;
@@ -47,6 +39,7 @@ LayoutMenu::LayoutMenu() {
 
 	old_select = -1;
 	now_select = 0;
+	
 	//-----------------------顶部栏--------------------------------
 	x = LEFT;
 
@@ -75,8 +68,6 @@ LayoutMenu::LayoutMenu() {
 	time_text = new pu::element::TextBlock(x, TOP, "00:00");
 	this->Add(time_text);
 	//-----------------------顶部栏 结束--------------------------------
-
-	
 	pu::element::Image *image;
 	string path = DATA_PATH;
 	path += "/";
@@ -106,6 +97,9 @@ LayoutMenu::LayoutMenu() {
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
 	L_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_help"], { 0,0,0,255 }, { 255,255,255,48 });
+	L_button->SetOnClick([&]() {	
+			this->ShowHelp(!isShowHelp());
+	});
 	this->Add(L_button);
 
 	x += (language == 1 ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT * 2;
@@ -114,6 +108,9 @@ LayoutMenu::LayoutMenu() {
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
 	A_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_ok"], { 0,0,0,255 }, {255,255,255,48});
+	A_button->SetOnClick([&]() {	
+		RunGame(game_list[menu->GetSelectedIndex()]);
+	});
 	this->Add(A_button);
 
 	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
@@ -165,26 +162,71 @@ LayoutMenu::LayoutMenu() {
 	this->Add(image);
 	MINUS_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_refresh"], { 0,0,0,255 }, { 255,255,255,48 });
 	this->Add(MINUS_button);
+
+
+	//-----------------帮助窗口----------------------
+	
+	help_window_rect = new pu::element::Rectangle(0, TOP_HEIGHT , (language == 1 ? WINDOW_WIDTH * 4 / 3 : WINDOW_WIDTH), WINDOW_HEIGHT, { 50,50,50,172 }, 0);
+	this->Add(help_window_rect);
+	help_elms.push_back(help_window_rect);
+
+	help_window = new pu::element::Rectangle(4, TOP_HEIGHT + 4 , (language == 1 ? WINDOW_WIDTH * 4 / 3 : WINDOW_WIDTH) - 8 , WINDOW_HEIGHT - 8, { 225,225,225,172 }, 0);
+	this->Add(help_window);
+	help_elms.push_back(help_window);
+
+	pu::element::TextBlock *textblock;
+	x = 32;
+	y = TOP_HEIGHT + 24;
+	textblock = new pu::element::TextBlock(x, y,  text["help_title"]);
+	textblock->SetX( (0 + WINDOW_WIDTH - textblock->GetTextWidth()) / 2 );
+	this->Add(textblock);
+	help_elms.push_back(textblock);
+	y += 32 + 16;
+
+
+	string	tmp_text[12] = {"help_A", "help_B", "help_X", "help_Y","help_UP", "help_DOWN", "help_LEFT", "help_RIGHT","help_L", "help_R", "help_LS", "help_RS"};
+	int		tmp_okey[12] = {OKEY_A,   OKEY_B,   OKEY_X,   OKEY_Y,  OKEY_DUP,   OKEY_DDOWN,   OKEY_DLEFT,   OKEY_DRIGHT,  OKEY_L,   OKEY_R,   OKEY_LSTICK,   OKEY_RSTICK};
+	for(int i=0; i < 12; i++){
+		image = new pu::element::Image(x, y, path + onsdata[tmp_okey[i]].name);
+		image->SetWidth(BUTTON_HEIGHT);
+		image->SetHeight(BUTTON_HEIGHT);
+		this->Add(image);
+		help_elms.push_back(image);
+		textblock = new pu::element::TextBlock(x + 48, y + 3, text[tmp_text[i]]);
+		this->Add(textblock);
+		help_elms.push_back(textblock);
+		y += 32 + 10;
+
+	}
+	pu::element::Rectangle *tmp_rect = new pu::element::Rectangle(x+2, y+2 , BUTTON_HEIGHT-4, BUTTON_HEIGHT-4, { 0,0,0,255 }, 0);
+	this->Add(tmp_rect);
+	help_elms.push_back(tmp_rect);
+	textblock = new pu::element::TextBlock(x + 48, y + 3, text["help_screen"]);
+	this->Add(textblock);
+	help_elms.push_back(textblock);
+	this->ShowHelp(false);
+
+	
 }
 
-
-void LayoutMenu::Update() {
+void LayoutWindow::ShowHelp(bool is_show){
+	is_show_help = is_show;
 	
+	for(int i = 0;i<help_elms.size();i++){
+		help_elms[i]->SetVisible(is_show_help);
+	}
+	
+
+}
+void LayoutWindow::Update(){
 	if (isEmpty())  goto common_update;
 	//--------------------当前选择变更------------------
 	now_select = menu->GetSelectedIndex();
 	if (old_select == now_select) goto common_update;
 
-
-
 	cout << "update:"<<game_list[now_select]->GetPath() << endl;
-
-	
-
-
-
 	old_select = now_select;
-	//--------------------全局更新------------------
+
 common_update:
 	time_text->SetText(GetCurrentTime(false));
 	int battery_value = GetBatteryLevel();
@@ -197,13 +239,9 @@ common_update:
 	sprintf(batterystr, "%d%%", battery_value);
 	battery_text->SetText(std::string(batterystr));
 	delete batterystr;
-
-
-
-	return;
-	//battery_text->SetText();
-	//time_text->SetText();
 }
+
+
 
 
 
@@ -212,11 +250,14 @@ GUIMain::GUIMain() {
 	
 	LoadConfig();
 	WriteDefaultConfig();
-
+	pu::render::SetDefaultFontFromShared(pu::render::SharedFont::ChineseSimplified);
 	//this->SetFPS(60);
-	layout_menu = new LayoutMenu();
-	this->AddThread(std::bind(&LayoutMenu::Update, layout_menu));
-	this->LoadLayout(layout_menu);
+
+
+	layout_window = new LayoutWindow();
+
+	this->AddThread(std::bind(&LayoutWindow::Update, layout_window));
+	this->LoadLayout(layout_window);
 
 	this->SetOnInput([&](u64 Down, u64 Up, u64 Held, bool Touch) mutable
 	{
@@ -229,7 +270,10 @@ GUIMain::GUIMain() {
 				
 			}*/
 		}
-		if (Down & KEY_X) // If A is pressed, start with our dialog questions!
+		else if (Down & KEY_L) {
+			layout_window->ShowHelp(!layout_window->isShowHelp());
+		}
+		else if (Down & KEY_X) // If A is pressed, start with our dialog questions!
 		{
 			int opt = this->CreateShowDialog("Question", "Do you like apples?", { "Yes!", "No...", "Cancel" }, true); // (using latest option as cancel option)
 			if ((opt == -1) || (opt == -2)) // -1 and -2 are similar, but if the user cancels manually -1 is set, other types or cancel should be -2.
