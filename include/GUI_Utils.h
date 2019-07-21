@@ -102,7 +102,6 @@ extern void RunGame(GameInfo *info);
 
 
 
-
 extern void WriteDefaultConfig();
 
 extern void LoadLanguage(int lang = 0);

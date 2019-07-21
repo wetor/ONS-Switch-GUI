@@ -9,7 +9,7 @@
 #include "GUI_GameInfo.h"
 
 extern bool loop_exit;
-
+extern map<string,int> game_settings; 
 
 class LayoutWindow : public pu::Layout
 {
@@ -19,6 +19,9 @@ public:
 	void Update();
 	void ShowHelp(bool is_show);
 	bool isShowHelp(){ return is_show_help; }
+	void ShowSetting(bool is_show);
+	bool isShowSetting(){ return is_show_setting; }
+	void ApplySetting();
 private:
 	int old_select, now_select;
 
@@ -28,7 +31,7 @@ private:
 
 /* 主页面 */
 
-	
+	bool is_disable_menu = false;
 	pu::element::Rectangle *battery_bar;
 	pu::element::Rectangle *battery_rect;
 
@@ -38,12 +41,14 @@ private:
 	pu::element::TextBlock *battery_text;
 	pu::element::TextBlock *menu_text;
 
-	pu::element::MenuEX *menu;
-	
 
 	pu::element::Rectangle *top_rect;
 	pu::element::Rectangle *button_rect;
 
+
+	vector<pu::element::Element *> menu_elms;
+	pu::element::MenuEX *menu;
+	
 	pu::element::Button *A_button;
 	pu::element::Button *B_button;
 	pu::element::Button *Y_button;
@@ -61,14 +66,22 @@ private:
 	pu::element::Rectangle *help_window_rect;
 	vector<pu::element::Image *> help_images;
 	vector<pu::element::TextBlock *> help_texts;
-	pu::element::Button *help_button;
+	
 
 	
 
 
 
 	/*设置窗口 */
-	pu::element::Rectangle *window_setting;
+	bool is_show_setting = false;
+	vector<pu::element::Element *> setting_elms;
+
+	pu::element::Rectangle *setting_window;
+	pu::element::Rectangle *setting_window_rect;
+	vector<pu::element::Button *> setting_buttons;
+	vector<pu::element::TextBlock *> setting_texts;
+	map<string,int> settings; 
+
 };
 
 
@@ -87,6 +100,7 @@ class GUIMain : public pu::Application
 {
 public:
 	GUIMain();
+	void Update();
 	void LoadConfig();
 private:
 

@@ -18,9 +18,11 @@
 #define		ICON_SELECT_SIZE	280
 
 
-
-#define     WINDOW_WIDTH        ( SCREEN_WIDTH / 3 )
-#define     WINDOW_HEIGHT       ( SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT )
+#define     HELP_WINDOW_LEFT        0
+#define     HELP_WINDOW_WIDTH       ( SCREEN_WIDTH / 3 )
+#define     SETTING_WINDOW_LEFT     ( SCREEN_WIDTH / 2 )
+#define     SETTING_WINDOW_WIDTH    ( SCREEN_WIDTH / 2 )
+#define     WINDOW_HEIGHT           ( SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT )
 //┏━━━━━━━━━━━━━━━━━━━━┓
 //┣━━━━━━━━━━━━━━━━━━━━┫
 //┃─┐┌─┐┌─┐┌──┐┌─┐┌─┐┌─┃

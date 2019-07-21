@@ -39,6 +39,7 @@ extern "C"
 }
 
 GUIMain *gmain;
+map<string,int> game_settings; 
 bool loop_exit = false;
 
 void RunGame(GameInfo *info)
@@ -102,8 +103,11 @@ int main(int argc, char *argv[])
 	while (true)
 	{
 		SDL_Delay(20);
-		if (loop_exit)
+		if (loop_exit){
+			gmain->Close();
 			break;
+		}
+			
 	}
 
 	//gmain->Close();

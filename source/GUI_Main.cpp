@@ -2,22 +2,26 @@
 
 using namespace std;
 
+static pu::draw::Color text_color(0, 0, 0, 255);
+static pu::draw::Color bg_color(225, 225, 225, 255);
+static bool dark_mode = true;
 
 LayoutWindow::LayoutWindow(){
+	menu_elms.clear();
+	help_elms.clear();
 
 
-
-	menu = new pu::element::MenuEX(0, TOP_HEIGHT, SCREEN_WIDTH, pu::draw::Color(150, 150, 150, 200), ICON_SIZE, ICON_SELECT_SIZE, ICON_NUM);
-
+	menu = new pu::element::MenuEX(0, TOP_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT, pu::draw::Color(150, 150, 150, 100), ICON_SIZE, ICON_SELECT_SIZE, ICON_NUM);
 	int x = 0,y=0;
 	pu::element::MenuItem *item;
 	vector<string> dirpath;
 	GetGameDir(PATH, dirpath);
 
-	for (int i = 0; i < dirpath.size(); i++) {
+	for (int i = 0; i < (int)dirpath.size(); i++) {
 		GameInfo *info_tmp = new GameInfo(dirpath[i]);
 		game_list.push_back(info_tmp);
 		item = new pu::element::MenuItem(game_list[i]->GetName());
+		item->SetColor(text_color);
 		item->SetIcon(game_list[i]->GetIconPath(0));
 		string gamepath = this->game_list[i]->GetPath();
 		item->AddOnClick([info_tmp]() {					//RunGame
@@ -28,6 +32,7 @@ LayoutWindow::LayoutWindow(){
 		menu->AddItem(item);
 	}
 	this->Add(menu);
+	menu_elms.push_back(menu);
 	if (dirpath.empty()) {
 		menu_text = new pu::element::TextBlock(0, 0, text["txt_noname"]);
 		x =(SCREEN_WIDTH - menu_text->GetWidth()) / 2;
@@ -91,94 +96,122 @@ LayoutWindow::LayoutWindow(){
 	button_rect = new pu::element::Rectangle(0, BOTTOM, SCREEN_WIDTH, BOTTOM_HEIGHT, { 255,255,255,128 }, 0);
 	this->Add(button_rect);
 
-
+	//L 帮助
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_L].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	L_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_help"], { 0,0,0,255 }, { 255,255,255,48 });
+	L_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_help"], { 0,0,0,255 }, { 255,255,255,0 });
 	L_button->SetOnClick([&]() {	
 			this->ShowHelp(!isShowHelp());
 	});
 	this->Add(L_button);
+	menu_elms.push_back(L_button);
 
+	//A 确定
 	x += (language == 1 ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_A].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	A_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_ok"], { 0,0,0,255 }, {255,255,255,48});
-	A_button->SetOnClick([&]() {	
-		RunGame(game_list[menu->GetSelectedIndex()]);
+	A_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_ok"], { 0,0,0,255 }, {255,255,255,0});
+	A_button->SetOnClick([&]() {
+		RunGame(game_list[menu->GetSelectedIndex()]);//启动游戏
+
 	});
 	this->Add(A_button);
+	menu_elms.push_back(A_button);
 
+	//B 取消
 	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_B].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	B_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_back"], { 0,0,0,255 }, { 255,255,255,48 });
+	B_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_back"], { 0,0,0,255 }, { 255,255,255,0 });
+	B_button->SetOnClick([&]{
+		if(this->isShowHelp())
+			this->ShowHelp(false);
+		if(this->isShowSetting())
+			this->ShowSetting(false);
+	});
 	this->Add(B_button);
+	menu_elms.push_back(B_button);
 
+	//Y 信息
 	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_Y].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	Y_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_info"], { 0,0,0,255 }, { 255,255,255,48 });
+	Y_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_info"], { 0,0,0,255 }, { 255,255,255,0 });
 	this->Add(Y_button);
+	menu_elms.push_back(Y_button);
 
+	//X 资源
 	x += (language == 1 ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_X].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	X_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_res"], { 0,0,0,255 }, { 255,255,255,48 });
+	X_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_res"], { 0,0,0,255 }, { 255,255,255,0 });
 	this->Add(X_button);
+	menu_elms.push_back(X_button);
 
+	//R播放器
 	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_R].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	R_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_player"], { 0,0,0,255 }, { 255,255,255,48 });
+	R_button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_player"], { 0,0,0,255 }, { 255,255,255,0 });
 	this->Add(R_button);
+	menu_elms.push_back(R_button);
 
 
-
+	//+ 设置
 	x = SCREEN_WIDTH - BUTTON_HEIGHT - LEFT - (language == 1 ? BUTTON_WIDTH : BUTTON_WIDTH / 2) ;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_PLUS].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	PLUS_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_setting"], { 0,0,0,255 }, { 255,255,255,48 });
+	PLUS_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_setting"], { 0,0,0,255 }, { 255,255,255,0 });
+	PLUS_button->SetOnClick([&]{
+		this->ShowSetting(!isShowSetting());
+	});
 	this->Add(PLUS_button);
+	menu_elms.push_back(menu);
 
+	//- 刷新
 	x -= ((language == 1 ? BUTTON_WIDTH : BUTTON_WIDTH / 2) + BUTTON_HEIGHT + LEFT * 2);
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_MINUS].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	MINUS_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_refresh"], { 0,0,0,255 }, { 255,255,255,48 });
+	MINUS_button = new pu::element::Button(x + BUTTON_HEIGHT, y, (language == 1 ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_refresh"], { 0,0,0,255 }, { 255,255,255,0 });
+	MINUS_button->SetOnClick([&]{
+		loop_exit = true;
+	});
 	this->Add(MINUS_button);
+	menu_elms.push_back(menu);
 
 
+	pu::element::TextBlock *textblock;
 	//-----------------帮助窗口----------------------
-	
-	help_window_rect = new pu::element::Rectangle(0, TOP_HEIGHT , (language == 1 ? WINDOW_WIDTH * 4 / 3 : WINDOW_WIDTH), WINDOW_HEIGHT, { 50,50,50,172 }, 0);
+
+	help_window_rect = new pu::element::Rectangle(HELP_WINDOW_LEFT, TOP_HEIGHT , (language == 1 ? HELP_WINDOW_WIDTH * 4 / 3 : HELP_WINDOW_WIDTH), WINDOW_HEIGHT, { 50,50,50,172 }, 0);
 	this->Add(help_window_rect);
 	help_elms.push_back(help_window_rect);
 
-	help_window = new pu::element::Rectangle(4, TOP_HEIGHT + 4 , (language == 1 ? WINDOW_WIDTH * 4 / 3 : WINDOW_WIDTH) - 8 , WINDOW_HEIGHT - 8, { 225,225,225,172 }, 0);
+	help_window = new pu::element::Rectangle(HELP_WINDOW_LEFT + 4, TOP_HEIGHT + 4 , (language == 1 ? HELP_WINDOW_WIDTH * 4 / 3 : HELP_WINDOW_WIDTH) - 8 , WINDOW_HEIGHT - 8, { 225,225,225,172 }, 0);
 	this->Add(help_window);
 	help_elms.push_back(help_window);
 
-	pu::element::TextBlock *textblock;
-	x = 32;
+	
+	x = HELP_WINDOW_LEFT + 32;
 	y = TOP_HEIGHT + 24;
 	textblock = new pu::element::TextBlock(x, y,  text["help_title"]);
-	textblock->SetX( (0 + WINDOW_WIDTH - textblock->GetTextWidth()) / 2 );
+	textblock->SetX( (HELP_WINDOW_LEFT + HELP_WINDOW_WIDTH - textblock->GetTextWidth()) / 2 );
 	this->Add(textblock);
 	help_elms.push_back(textblock);
 	y += 32 + 16;
@@ -206,19 +239,85 @@ LayoutWindow::LayoutWindow(){
 	help_elms.push_back(textblock);
 	this->ShowHelp(false);
 
+	//-----------------设置窗口----------------------
+
+	setting_window_rect = new pu::element::Rectangle(SETTING_WINDOW_LEFT, TOP_HEIGHT , SETTING_WINDOW_WIDTH, WINDOW_HEIGHT, { 50,50,50,172 }, 0);
+	this->Add(setting_window_rect);
+	setting_elms.push_back(setting_window_rect);
+
+	setting_window = new pu::element::Rectangle(SETTING_WINDOW_LEFT + 4, TOP_HEIGHT + 4 , SETTING_WINDOW_WIDTH - 8 , WINDOW_HEIGHT - 8, { 225,225,225,172 }, 0);
+	this->Add(setting_window);
+	setting_elms.push_back(setting_window);
+	x = SETTING_WINDOW_LEFT + 32;
+	y = TOP_HEIGHT + 24;
+	
+	this->ShowSetting(false);
 	
 }
 
 void LayoutWindow::ShowHelp(bool is_show){
 	is_show_help = is_show;
-	
-	for(int i = 0;i<help_elms.size();i++){
+	is_disable_menu = is_show;
+	for(int i = 0;i<(int)menu_elms.size();i++){
+		menu_elms[i]->SetDisable(is_disable_menu);
+	}
+	if(is_show_help){
+		
+		//L A B 和 - 启用，其他禁止
+		L_button->SetDisable(false);
+		//A_button->SetDisable(false);
+		B_button->SetDisable(false);
+		MINUS_button->SetDisable(false);
+		if(is_show_setting){
+			//隐藏设置窗口
+			is_show_setting = false;
+			for(int i = 0;i<(int)setting_elms.size();i++){
+				setting_elms[i]->SetVisible(is_show_setting);
+			}
+		}
+	}
+
+	//显示帮助窗口
+	for(int i = 0;i<(int)help_elms.size();i++){
 		help_elms[i]->SetVisible(is_show_help);
 	}
 	
 
 }
+void LayoutWindow::ShowSetting(bool is_show){
+	is_show_setting = is_show;
+	is_disable_menu = is_show;
+	for(int i = 0;i<(int)menu_elms.size();i++){
+		menu_elms[i]->SetDisable(is_disable_menu);
+	}
+	if(is_show_setting){
+		//+ A B 和 - 启用，其他禁止
+		PLUS_button->SetDisable(false);
+		//A_button->SetDisable(false);
+		B_button->SetDisable(false);
+		MINUS_button->SetDisable(false);
+		if(is_show_setting){
+			//隐藏帮组窗口
+			is_show_help = false;
+			for(int i = 0;i<(int)help_elms.size();i++){
+				help_elms[i]->SetVisible(is_show_help);
+			}
+		}
+	}
+
+	//显示设置窗口
+	for(int i = 0;i<(int)setting_elms.size();i++){
+		setting_elms[i]->SetVisible(is_show_setting);
+	}
+	if(!is_show_setting)//关闭设置窗口，应用设置
+		ApplySetting();
+}
+void LayoutWindow::ApplySetting(){
+
+}
+
 void LayoutWindow::Update(){
+
 	if (isEmpty())  goto common_update;
 	//--------------------当前选择变更------------------
 	now_select = menu->GetSelectedIndex();
@@ -245,9 +344,18 @@ common_update:
 
 
 
-
+/*
+窗口初始化
+全局按键设置
+ */
 GUIMain::GUIMain() {
-	
+	if(dark_mode){
+		text_color = pu::draw::Color(255, 255, 255, 255);
+		bg_color = pu::draw::Color(32, 32, 32, 225);
+	}else{
+		text_color = pu::draw::Color(0, 0, 0, 255);
+		bg_color = pu::draw::Color(225, 225, 225, 255);
+	}
 	LoadConfig();
 	WriteDefaultConfig();
 	pu::render::SetDefaultFontFromShared(pu::render::SharedFont::ChineseSimplified);
@@ -255,23 +363,27 @@ GUIMain::GUIMain() {
 
 
 	layout_window = new LayoutWindow();
-
+	layout_window->SetBackgroundColor(bg_color);
+	this->AddThread(std::bind(&GUIMain::Update, this));
 	this->AddThread(std::bind(&LayoutWindow::Update, layout_window));
 	this->LoadLayout(layout_window);
-
 	this->SetOnInput([&](u64 Down, u64 Up, u64 Held, bool Touch) mutable
 	{
 		if (Down & KEY_MINUS) {
 			this->Close();
 			loop_exit = true;
-			/*int opt = this->CreateShowDialog("确定要退出？", "", { "退出", "取消" }, true); // (using latest option as cancel option)
-			if(opt == 0)
-			{
-				
-			}*/
 		}
 		else if (Down & KEY_L) {
 			layout_window->ShowHelp(!layout_window->isShowHelp());
+		}
+		else if (Down & KEY_PLUS) {
+			layout_window->ShowSetting(!layout_window->isShowSetting());
+		}
+		else if (Down & KEY_B ) {
+			if(layout_window->isShowHelp())
+				layout_window->ShowHelp(false);
+			if(layout_window->isShowSetting())
+				layout_window->ShowSetting(false);
 		}
 		else if (Down & KEY_X) // If A is pressed, start with our dialog questions!
 		{
@@ -298,7 +410,9 @@ GUIMain::GUIMain() {
 
 
 }
-
+void GUIMain::Update(){
+	if(loop_exit) this->Close();
+} 
 void GUIMain::LoadConfig() {
 
 	LoadLanguage(0);
