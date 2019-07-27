@@ -1,3 +1,6 @@
+#define     GUI_VERSION         11
+
+
 #define		SCREEN_WIDTH		1280
 #define		SCREEN_HEIGHT		720
 #define		LEFT				8
@@ -20,8 +23,8 @@
 
 #define     HELP_WINDOW_LEFT        0
 #define     HELP_WINDOW_WIDTH       ( SCREEN_WIDTH / 3 )
-#define     SETTING_WINDOW_LEFT     ( SCREEN_WIDTH / 2 )
-#define     SETTING_WINDOW_WIDTH    ( SCREEN_WIDTH / 2 )
+#define     SETTING_WINDOW_LEFT     ( SCREEN_WIDTH * 2 / 3 )
+#define     SETTING_WINDOW_WIDTH    ( SCREEN_WIDTH / 3 )
 #define     WINDOW_HEIGHT           ( SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT )
 //┏━━━━━━━━━━━━━━━━━━━━┓
 //┣━━━━━━━━━━━━━━━━━━━━┫

@@ -45,9 +45,8 @@
 using namespace std;
 using namespace libconfig;
 
-extern int language;
 extern map<string, string> text;	//language
-
+extern map<string,int> settings; 
 
 struct data_t {
 	uint8_t * data;
@@ -96,14 +95,19 @@ enum ns_data{
 	DATA_FONT
 };
 
-
+enum LANGUAGE{
+	Chinese,
+	English,
+	Other
+};
 
 extern void RunGame(GameInfo *info);
 
 
 
-extern void WriteDefaultConfig();
+extern void WriteConfig(bool default0 = false);
 
+extern void LoadConfig();
 extern void LoadLanguage(int lang = 0);
 extern int GetGameDir(string path, vector<string> &dirpath);
 extern int GetGameIcon(string path, vector<string>&list);

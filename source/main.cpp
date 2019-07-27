@@ -39,7 +39,7 @@ extern "C"
 }
 
 GUIMain *gmain;
-map<string,int> game_settings; 
+map<string,int> settings; 
 bool loop_exit = false;
 
 void RunGame(GameInfo *info)
@@ -48,7 +48,7 @@ void RunGame(GameInfo *info)
 	if(opt==0){
 		printf("Run Game :%s\n", info->GetPath().c_str());
 		/*RUN game*/
-		envSetNextLoad("sdmc:/onsemu/ONS.nro", ("sdmc:/onsemu/ONS.nro " + info->GetPath() + " 1").c_str());
+		envSetNextLoad("sdmc:/onsemu/ONS.nro", ("sdmc:/onsemu/ONS.nro " + info->GetPath() + " " + (settings["fullscreen"]==1?"1":"0")).c_str());
 		//info->SetStartTime(GetCurrentDate() + " " + GetCurrentTime());
 		gmain->Close();
 		loop_exit = true;
@@ -98,6 +98,10 @@ int main(int argc, char *argv[])
 	if (R_FAILED(nifmInitialize()))
 		printf("nifm error!\n");
 
+	WriteData();
+	WriteConfig(true);
+	LoadConfig();
+	LoadLanguage(settings["language"]);
 	gmain = new GUIMain();
 	gmain->Show();
 	while (true)
@@ -108,13 +112,11 @@ int main(int argc, char *argv[])
 			break;
 		}
 			
+			
 	}
-
 	//gmain->Close();
 	delete gmain;
-
 	//envSetNextLoad("sdmc:/onsemu/ONScripter.nro", "sdmc:/onsemu/ONScripter.nro test233sdmc:/onsemu/ONScripter.nro");
-
 	nifmExit();
 	bpcExit();
 	splExit();

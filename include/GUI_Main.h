@@ -9,7 +9,6 @@
 #include "GUI_GameInfo.h"
 
 extern bool loop_exit;
-extern map<string,int> game_settings; 
 
 class LayoutWindow : public pu::Layout
 {
@@ -17,11 +16,14 @@ public:
 	LayoutWindow();
 	bool isEmpty() { return game_list.empty(); }
 	void Update();
+	void OnInput(u64 Down, u64 Up, u64 Held, bool Touch);
 	void ShowHelp(bool is_show);
 	bool isShowHelp(){ return is_show_help; }
+	void HelpOnInput(u64 Down, u64 Up, u64 Held, bool Touch);
 	void ShowSetting(bool is_show);
 	bool isShowSetting(){ return is_show_setting; }
-	void ApplySetting();
+	void SettingOnInput(u64 Down, u64 Up, u64 Held, bool Touch);
+
 private:
 	int old_select, now_select;
 
@@ -35,28 +37,14 @@ private:
 	pu::element::Rectangle *battery_bar;
 	pu::element::Rectangle *battery_rect;
 
-	pu::element::TextBlock *version_text;
 	pu::element::TextBlock *time_text;
-	pu::element::TextBlock *other_text;
 	pu::element::TextBlock *battery_text;
-	pu::element::TextBlock *menu_text;
 
 
-	pu::element::Rectangle *top_rect;
-	pu::element::Rectangle *button_rect;
-
-
+	map<int,int> button_index; 
 	vector<pu::element::Element *> menu_elms;
 	pu::element::MenuEX *menu;
 	
-	pu::element::Button *A_button;
-	pu::element::Button *B_button;
-	pu::element::Button *Y_button;
-	pu::element::Button *L_button;
-	pu::element::Button *X_button;
-	pu::element::Button *R_button;
-	pu::element::Button *PLUS_button;
-	pu::element::Button *MINUS_button;
 
 	/*帮助窗口 左侧 半屏幕*/
 	bool is_show_help = false;
@@ -64,8 +52,6 @@ private:
 
 	pu::element::Rectangle *help_window;
 	pu::element::Rectangle *help_window_rect;
-	vector<pu::element::Image *> help_images;
-	vector<pu::element::TextBlock *> help_texts;
 	
 
 	
@@ -73,14 +59,23 @@ private:
 
 
 	/*设置窗口 */
+
 	bool is_show_setting = false;
 	vector<pu::element::Element *> setting_elms;
 
+	enum SETTING_BUTTON{
+		SET_BEGIN,
+		SET_LANGUAGE,
+		SET_DARKMODE,
+		SET_FULLSCREEN,
+		SET_END,
+	};
+	map<SETTING_BUTTON,int> setting_index; 
+	SETTING_BUTTON focus_button;
 	pu::element::Rectangle *setting_window;
 	pu::element::Rectangle *setting_window_rect;
-	vector<pu::element::Button *> setting_buttons;
-	vector<pu::element::TextBlock *> setting_texts;
-	map<string,int> settings; 
+
+
 
 };
 
@@ -101,7 +96,6 @@ class GUIMain : public pu::Application
 public:
 	GUIMain();
 	void Update();
-	void LoadConfig();
 private:
 
 	// Layout instance
