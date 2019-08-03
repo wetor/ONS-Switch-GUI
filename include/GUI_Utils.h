@@ -100,8 +100,9 @@ enum LANGUAGE{
 	English,
 	Other
 };
+extern bool loop_exit;
 
-extern void RunGame(GameInfo *info);
+extern void RunGame(OnsGameInfo *info);
 
 
 
@@ -112,11 +113,13 @@ extern void LoadLanguage(int lang = 0);
 extern int GetGameDir(string path, vector<string> &dirpath);
 extern int GetGameIcon(string path, vector<string>&list);
 
-extern bool CheckScript(string path);
+extern bool CheckScript(string path, vector<string>& files);
 extern int CheckFile(string path);
 extern bool CheckDir(string path);
 
-
+extern string GetFullPath(string path);
+extern string GetFileName(string path);
+extern string GetExtensions(string path);
 
 extern bool CopyFile(string Source, string Dest);
 extern bool CreateDir(string path);

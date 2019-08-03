@@ -26,14 +26,16 @@
 #define     SETTING_WINDOW_LEFT     ( SCREEN_WIDTH * 2 / 3 )
 #define     SETTING_WINDOW_WIDTH    ( SCREEN_WIDTH / 3 )
 #define     WINDOW_HEIGHT           ( SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT )
-//┏━━━━━━━━━━━━━━━━━━━━┓
-//┣━━━━━━━━━━━━━━━━━━━━┫
-//┃─┐┌─┐┌─┐┌──┐┌─┐┌─┐┌─┃
-//┃  ││  ││  ││    ││  ││  ││  ┃
-//┃─┘└─┘└─┘│    │└─┘└─┘└─┃
-//┃                └──┘                ┃
-//  1     2     3      4      5      6    7
+//┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+//┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+//┃─┐┌──┐┌──┐┌──┐┌────┐┌──┐┌──┐┌──┐┌─┃
+//┃ ││  ││  ││  ││    ││  ││  ││  ││ ┃
+//┃─┘└──┘└──┘└──┘│    │└──┘└──┘└──┘└─┃
+//┃              └────┘              ┃
+//     1   2   3    4    5   6   7
 //
+
+#define		TEMP_PATH			"sdmc:/onsemu/temp"
 #define		PATH				"sdmc:/onsemu"
 #define		DATA_PATH			"sdmc:/onsemu/onsdata"
 #define		DEFAULT_ICON		"sdmc:/onsemu/onsdata/default_icon.png"

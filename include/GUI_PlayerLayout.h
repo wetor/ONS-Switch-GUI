@@ -1,0 +1,4 @@
+class PlayerLayout{
+public:
+    PlayerLayout(){};
+};

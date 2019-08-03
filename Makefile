@@ -38,9 +38,9 @@ APP_VERSION := Test
 # ICON := Icon.jpg
 TARGET		:=	ONS-Switch-GUI
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	source ../ONScripter-Switch/source/reader
 DATA		:=	data
-INCLUDES	:=	include Plutonium/Plutonium/Include
+INCLUDES	:=	include Plutonium/Plutonium/Include ../ONScripter-Switch/include
 EXEFS_SRC	:=	exefs_src
 # ROMFS		:=	RomFs
 

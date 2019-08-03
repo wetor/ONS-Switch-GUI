@@ -1,6 +1,8 @@
 #include "GUI_Main.h"
 #include <switch.h>
 #include <twili.h>
+#include <Common.h>
+
 extern u32 __nx_applet_type;
 extern char *fake_heap_end;
 extern "C"
@@ -42,7 +44,7 @@ GUIMain *gmain;
 map<string,int> settings; 
 bool loop_exit = false;
 
-void RunGame(GameInfo *info)
+void RunGame(OnsGameInfo *info)
 {
 	int opt = gmain->CreateShowDialog(text["msg_tip_run"], "", {text["msg_run"], text["msg_no"]}, true); // (using latest option as cancel option)
 	if(opt==0){
@@ -97,6 +99,10 @@ int main(int argc, char *argv[])
 		printf("bpc error!\n");
 	if (R_FAILED(nifmInitialize()))
 		printf("nifm error!\n");
+	
+
+	//argv[0] = (char*)"sdmc:/onsemu/hanchan/arc.nsa";
+	//nsadec_main(argv[0]);
 
 	WriteData();
 	WriteConfig(true);
@@ -111,8 +117,7 @@ int main(int argc, char *argv[])
 			gmain->Close();
 			break;
 		}
-			
-			
+
 	}
 	//gmain->Close();
 	delete gmain;
@@ -130,6 +135,6 @@ int main(int argc, char *argv[])
 	appletExit();
 	svcSetHeapSize(&ghaddr, ((u8 *)envGetHeapOverrideAddr() + envGetHeapOverrideSize()) - (u8 *)ghaddr);
 	twiliExit();
-
+	
 	return 0;
 }

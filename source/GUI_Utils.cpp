@@ -183,9 +183,31 @@ int GetGameDir(string path, vector<string> &list)
 	closedir(dir);
 	return list.size();
 }
-
-bool CheckScript(string path)
+string GetFileName(string path){
+	int pos=path.find_last_of('/');
+	if(pos >=0 && pos < (int)path.length())
+		return path.substr(pos+1);
+	else
+		return "";
+}
+string GetFullPath(string path){
+	int pos=path.find_last_of('/');
+	if(pos >=0 && pos < (int)path.length())
+		return path.substr(0,pos);
+	else
+		return "";
+}
+string GetExtensions(string path){
+	int pos=path.find_last_of('.');
+	if(pos >=0 && pos < (int)path.length())
+		return path.substr(pos+1);
+	else
+		return "";
+	
+}
+bool CheckScript(string path, vector<string>& files)
 {
+	files.clear();
 	DIR *dir;
 	struct dirent *ptr;
 	if ((dir = opendir(path.c_str())) == NULL)
@@ -207,6 +229,8 @@ bool CheckScript(string path)
 				exist = true;
 			else if (!strcmp(ptr->d_name, "nscript.dat"))
 				exist = true;
+			else
+				files.push_back(ptr->d_name);
 		}
 		if (exist)
 			break;
@@ -299,18 +323,22 @@ void WriteData()
 
 	if (!CheckDir(PATH))
 		CreateDir(PATH);
+	if (!CheckDir(TEMP_PATH))
+		CreateDir(TEMP_PATH);
 	if (!CheckDir(DATA_PATH))
 		CreateDir(DATA_PATH);
 	string path = DATA_PATH;
 	path += "/";
 	for (int i = 0; i < 18; i++)
 	{
-		if (CheckFile(path + onsdata[i].name) != onsdata[i].len)
+		if (CheckFile(path + onsdata[i].name) != (int)onsdata[i].len)
 		{
 			WriteFile(path + onsdata[i].name, onsdata[i].data, onsdata[i].len);
 			cout << path + onsdata[i].name << endl;
 		}
 	}
+	
+
 }
 
 string GetCurrentTime(bool second)
@@ -320,14 +348,14 @@ string GetCurrentTime(bool second)
 	int h = times->tm_hour;
 	int min = times->tm_min;
 	int s = times->tm_sec;
-	char timestr[9];
+	char timestr[12];
 	if (second)
 	{
-		sprintf(timestr, "%02d:%02d:%02d", h, min, s);
+		snprintf(timestr,10, "%02d:%02d:%02d", h, min, s);
 	}
 	else
 	{
-		sprintf(timestr, "%02d:%02d", h, min);
+		snprintf(timestr,6, "%02d:%02d", h, min);
 	}
 	return std::string(timestr);
 }
@@ -338,15 +366,15 @@ string GetCurrentDate(bool isyear)
 	int year = 1900 + times->tm_year;
 	int mon = 1 + times->tm_mon;
 	int day = times->tm_mday;
-	char timestr[9];
+	char timestr[12];
 	if (isyear)
 	{
-		sprintf(timestr, "%02d-%02d-%02d", year, mon, day);
+		snprintf(timestr,10, "%02d-%02d-%02d", year, mon, day);
 		//2019-6-11 18:56:32
 	}
 	else
 	{
-		sprintf(timestr, "%02d-%02d", mon, day);
+		snprintf(timestr,6, "%02d-%02d", mon, day);
 	}
 	return std::string(timestr);
 }
