@@ -136,5 +136,7 @@ int main(int argc, char *argv[])
 	svcSetHeapSize(&ghaddr, ((u8 *)envGetHeapOverrideAddr() + envGetHeapOverrideSize()) - (u8 *)ghaddr);
 	twiliExit();
 	
+	
+	
 	return 0;
 }

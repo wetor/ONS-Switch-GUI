@@ -24,7 +24,7 @@ WindowLayout::WindowLayout()
 	string path = string(DATA_PATH) + "/";
 
 	menu = new pu::element::MenuEX(0, TOP_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT, pu::draw::Color(150, 150, 150, 100), ICON_SIZE, ICON_SELECT_SIZE, ICON_NUM);
-	//menu->SetType(pu::element::TYPE::DOWN);
+	menu->SetType(pu::element::TYPE::DOWN);
 	int x = 0, y = 0;
 	pu::element::MenuItem *item;
 	vector<string> dirpath;
@@ -300,7 +300,10 @@ void WindowLayout::ShowHelp(bool is_show)
 	is_disable_menu = is_show;
 	for (int i = 0; i < (int)menu_elms.size(); i++)
 	{
-		menu_elms[i]->SetDisable(is_disable_menu);
+		if(i==0)
+			((pu::element::MenuEX *)menu_elms[i])->SetDisable(is_disable_menu);
+		else
+			menu_elms[i]->SetDisable(is_disable_menu);
 	}
 	if (is_show_help)
 	{
@@ -347,7 +350,10 @@ void WindowLayout::ShowSetting(bool is_show)
 	is_disable_menu = is_show;
 	for (int i = 0; i < (int)menu_elms.size(); i++)
 	{
-		menu_elms[i]->SetDisable(is_disable_menu);
+		if(i==0)
+			((pu::element::MenuEX *)menu_elms[i])->SetDisable(is_disable_menu);
+		else
+			menu_elms[i]->SetDisable(is_disable_menu);
 	}
 	if (is_show_setting)
 	{
