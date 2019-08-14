@@ -9,7 +9,6 @@ extern "C"
 {
 	void __nx_win_init(void);
 	void __libnx_init_time(void);
-
 	void __appInit(void)
 	{
 		Result rc = smInitialize();
@@ -25,7 +24,7 @@ extern "C"
 				hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
 			setsysExit();
 		}
-
+		
 		rc = timeInitialize();
 		if (R_FAILED(rc))
 			fatalSimple(MAKERESULT(Module_Libnx, LibnxError_InitFail_Time));
@@ -40,9 +39,12 @@ extern "C"
 	}
 }
 
+
 GUIMain *gmain;
 map<string,int> settings; 
 bool loop_exit = false;
+
+
 
 void RunGame(OnsGameInfo *info)
 {
@@ -50,7 +52,7 @@ void RunGame(OnsGameInfo *info)
 	if(opt==0){
 		printf("Run Game :%s\n", info->GetPath().c_str());
 		/*RUN game*/
-		envSetNextLoad("sdmc:/onsemu/ONS.nro", ("sdmc:/onsemu/ONS.nro " + info->GetPath() + " " + (settings["fullscreen"]==1?"1":"0")).c_str());
+		envSetNextLoad("sdmc:/onsemu/ONS.nro", (string(DATA_PATH) + " " + info->GetPath() + " " + (settings["fullscreen"]==1?"1":"0")).c_str());
 		//info->SetStartTime(GetCurrentDate() + " " + GetCurrentTime());
 		gmain->Close();
 		loop_exit = true;
@@ -59,18 +61,17 @@ void RunGame(OnsGameInfo *info)
 	/*Write StartUp Info*/
 	//loop_exit = true;
 	//gmain->Close();
-
 	//delete gmain;
 	//twiliExit();
 	//exit(0);
 }
+
 
 static void *ghaddr;
 int main(int argc, char *argv[])
 {
 
 	twiliInitialize();
-
 	srand(time(NULL));
 
 	if (R_FAILED(svcSetHeapSize(&ghaddr, 0x10000000)))
@@ -100,10 +101,10 @@ int main(int argc, char *argv[])
 	if (R_FAILED(nifmInitialize()))
 		printf("nifm error!\n");
 	
+	
 
 	//argv[0] = (char*)"sdmc:/onsemu/hanchan/arc.nsa";
 	//nsadec_main(argv[0]);
-
 	WriteData();
 	WriteConfig(true);
 	LoadConfig();
@@ -117,7 +118,6 @@ int main(int argc, char *argv[])
 			gmain->Close();
 			break;
 		}
-
 	}
 	//gmain->Close();
 	delete gmain;
@@ -136,8 +136,5 @@ int main(int argc, char *argv[])
 	svcSetHeapSize(&ghaddr, ((u8 *)envGetHeapOverrideAddr() + envGetHeapOverrideSize()) - (u8 *)ghaddr);
 	twiliExit();
 	
-
-
-
 	return 0;
 }
