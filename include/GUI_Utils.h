@@ -100,6 +100,15 @@ enum LANGUAGE{
 	English,
 	Other
 };
+
+struct script_t{
+	//*define
+	int w,h;
+	string caption;
+	string versionstr;
+	//*start
+};
+
 extern bool loop_exit;
 
 extern void RunGame(OnsGameInfo *info);

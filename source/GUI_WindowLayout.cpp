@@ -2,7 +2,7 @@
 
 WindowLayout::WindowLayout()
 {
-    if (settings["darkmode"])
+	if (settings["darkmode"])
 	{
 		text_color = pu::draw::Color(255, 255, 255, 255);
 	}
@@ -10,7 +10,6 @@ WindowLayout::WindowLayout()
 	{
 		text_color = pu::draw::Color(0, 0, 0, 255);
 	}
-
 
 	menu_elms.clear();
 	help_elms.clear();
@@ -24,7 +23,21 @@ WindowLayout::WindowLayout()
 	string path = string(DATA_PATH) + "/";
 
 	menu = new pu::element::MenuEX(0, TOP_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT, pu::draw::Color(150, 150, 150, 100), ICON_SIZE, ICON_SELECT_SIZE, ICON_NUM);
-	menu->SetType(pu::element::TYPE::DOWN);
+
+	switch (settings["iconstyle"])
+	{
+	case 0:
+		menu->SetType(pu::element::TYPE::DOWN);
+		break;
+	case 1:
+		menu->SetType(pu::element::TYPE::TOP);
+		break;
+	default:
+		settings["iconstyle"] = 0;
+		menu->SetType(pu::element::TYPE::DOWN);
+		break;
+	}
+
 	int x = 0, y = 0;
 	pu::element::MenuItem *item;
 	vector<string> dirpath;
@@ -45,6 +58,8 @@ WindowLayout::WindowLayout()
 		x += ICON_SIZE + 10;
 		menu->AddItem(item);
 	}
+	if (settings["lastselect"] < (int)dirpath.size())
+		menu->SetSelectedIndex(settings["lastselect"]);
 	this->Add(menu);
 	menu_elms.push_back(menu);
 	if (dirpath.empty())
@@ -78,7 +93,7 @@ WindowLayout::WindowLayout()
 	this->Add(image);
 	//-----------------下方按钮-------------------
 
-	x = LEFT;
+	x = LEFT_SIZE;
 	y = BUTTON_BOTTOM;
 
 	rect = new pu::element::Rectangle(0, BOTTOM, SCREEN_WIDTH, BOTTOM_HEIGHT, {255, 255, 255, 128}, 0);
@@ -98,7 +113,7 @@ WindowLayout::WindowLayout()
 	menu_elms.push_back(button);
 
 	//A 确定
-	x += (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT * 2;
+	x += (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT_SIZE * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_A].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
@@ -112,7 +127,7 @@ WindowLayout::WindowLayout()
 	menu_elms.push_back(button);
 
 	//B 取消
-	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
+	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT_SIZE * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_B].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
@@ -129,7 +144,7 @@ WindowLayout::WindowLayout()
 	menu_elms.push_back(button);
 
 	//Y 信息
-	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
+	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT_SIZE * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_Y].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
@@ -140,7 +155,7 @@ WindowLayout::WindowLayout()
 	menu_elms.push_back(button);
 
 	//X 资源
-	x += (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT * 2;
+	x += (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT_SIZE * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_X].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
@@ -151,7 +166,7 @@ WindowLayout::WindowLayout()
 	menu_elms.push_back(button);
 
 	//R播放器
-	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT * 2;
+	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT_SIZE * 2;
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_R].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
@@ -162,7 +177,7 @@ WindowLayout::WindowLayout()
 	menu_elms.push_back(button);
 
 	//+ 设置
-	x = SCREEN_WIDTH - BUTTON_HEIGHT - LEFT - (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2);
+	x = SCREEN_WIDTH - BUTTON_HEIGHT - LEFT_SIZE - (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2);
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_PLUS].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
@@ -176,7 +191,7 @@ WindowLayout::WindowLayout()
 	menu_elms.push_back(button);
 
 	//- 刷新
-	x -= ((settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2) + BUTTON_HEIGHT + LEFT * 2);
+	x -= ((settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2) + BUTTON_HEIGHT + LEFT_SIZE * 2);
 	image = new pu::element::Image(x, y, path + onsdata[OKEY_MINUS].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
@@ -184,6 +199,7 @@ WindowLayout::WindowLayout()
 	button = new pu::element::Button(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_refresh"], {0, 0, 0, 255}, {255, 255, 255, 0});
 	button->SetOnClick([&] {
 		loop_exit = true;
+		WriteConfig();
 	});
 	this->Add(button);
 	button_index[OKEY_MINUS] = menu_elms.size();
@@ -273,6 +289,35 @@ WindowLayout::WindowLayout()
 	setting_elms.push_back(button);
 	y += 60;
 
+	button = new pu::element::Button(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_iconstyle"] + (settings["iconstyle"] ? text["setting_text_top"] : text["setting_text_down"]), {0, 0, 0, 255}, {255, 255, 255, 128});
+	button->SetOnClick([&] {
+		settings["iconstyle"]++;
+		focus_button = SETTING::ICONSTYLE;
+		string str = text["setting_iconstyle"];
+		switch (settings["iconstyle"])
+		{
+		case 0:
+			str += text["setting_text_down"];
+			menu->SetType(pu::element::TYPE::DOWN);
+			break;
+		case 1:
+			str += text["setting_text_top"];
+			menu->SetType(pu::element::TYPE::TOP);
+			break;
+		default:
+			settings["iconstyle"] = 0;
+			str += text["setting_text_down"];
+			menu->SetType(pu::element::TYPE::DOWN);
+			break;
+		}
+		((pu::element::Button *)setting_elms[setting_index[SETTING::ICONSTYLE]])->SetContent(str);
+		WriteConfig();
+	});
+	this->Add(button);
+	setting_index[SETTING::ICONSTYLE] = setting_elms.size();
+	setting_elms.push_back(button);
+	y += 60;
+
 	textblock = new pu::element::TextBlock(x, y, text["setting_game"]);
 	textblock->SetX(SETTING_WINDOW_LEFT + (SETTING_WINDOW_WIDTH - textblock->GetTextWidth()) / 2);
 	this->Add(textblock);
@@ -300,7 +345,7 @@ void WindowLayout::ShowHelp(bool is_show)
 	is_disable_menu = is_show;
 	for (int i = 0; i < (int)menu_elms.size(); i++)
 	{
-		if(i==0)
+		if (i == 0)
 			((pu::element::MenuEX *)menu_elms[i])->SetDisable(is_disable_menu);
 		else
 			menu_elms[i]->SetDisable(is_disable_menu);
@@ -350,14 +395,15 @@ void WindowLayout::ShowSetting(bool is_show)
 	is_disable_menu = is_show;
 	for (int i = 0; i < (int)menu_elms.size(); i++)
 	{
-		if(i==0)
+		if (i == 0)
 			((pu::element::MenuEX *)menu_elms[i])->SetDisable(is_disable_menu);
 		else
 			menu_elms[i]->SetDisable(is_disable_menu);
 	}
 	if (is_show_setting)
 	{
-		focus_button = (SETTING)(SETTING::BEGIN+1);
+		if (focus_button <= SETTING::BEGIN || focus_button >= SETTING::END)
+			focus_button = (SETTING)(SETTING::BEGIN + 1);
 		((pu::element::Button *)setting_elms[setting_index[focus_button]])->SetColor({0, 128, 255, 128});
 		//+ A B 和 - 启用，其他禁止
 		menu_elms[button_index[OKEY_PLUS]]->SetDisable(false);
@@ -387,7 +433,7 @@ void WindowLayout::SettingOnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 	{
 		touchPosition tch;
 		hidTouchRead(&tch, 0);
-		
+
 		//点击窗口以外
 		if (!(tch.px >= SETTING_WINDOW_LEFT && tch.px <= SETTING_WINDOW_LEFT + SETTING_WINDOW_WIDTH && tch.py >= TOP_HEIGHT && tch.py <= TOP_HEIGHT + WINDOW_HEIGHT) && tch.py < BOTTOM)
 		{
@@ -401,17 +447,20 @@ void WindowLayout::SettingOnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 		else
 			focus_button = (SETTING)(SETTING::BEGIN + 1);
 	}
-	else if(Down & KEY_UP){
+	else if (Down & KEY_UP)
+	{
 		if (focus_button - 1 > SETTING::BEGIN)
 			focus_button = (SETTING)(focus_button - 1);
 		else
 			focus_button = (SETTING)(SETTING::END - 1);
 	}
-	else if(Down & KEY_A){
+	else if (Down & KEY_A)
+	{
 
 		((pu::element::Button *)setting_elms[setting_index[focus_button]])->OnClick();
 	}
-	for(int i = SETTING::BEGIN + 1;i<SETTING::END;i++){
+	for (int i = SETTING::BEGIN + 1; i < SETTING::END; i++)
+	{
 		((pu::element::Button *)setting_elms[setting_index[(SETTING)i]])->SetColor({255, 255, 255, 128});
 	}
 
@@ -419,9 +468,10 @@ void WindowLayout::SettingOnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 }
 void WindowLayout::OnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 {
-	if(Touch){
+	if (Touch)
+	{
 		touchPosition tch;
-		
+
 		hidTouchRead(&tch, 0);
 	}
 	if (Down & KEY_L)
@@ -432,7 +482,7 @@ void WindowLayout::OnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 	{
 		ShowSetting(!isShowSetting());
 	}
-	else if (Down & KEY_B)
+	else if (Down & KEY_B || Down & KEY_LEFT || Down & KEY_RIGHT)
 	{
 		if (isShowHelp())
 			ShowHelp(false);
@@ -449,9 +499,9 @@ void WindowLayout::Update()
 	now_select = menu->GetSelectedIndex();
 	if (old_select == now_select)
 		return;
-
+	settings["lastselect"] = menu->GetSelectedIndex();
+	//printf("last %d\n",settings["lastselect"]);
 	cout << "update:" << game_list[now_select]->GetPath() << endl;
 	old_select = now_select;
-
-
+	WriteConfig();
 }

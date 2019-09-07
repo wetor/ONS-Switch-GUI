@@ -1,4 +1,5 @@
 #include "GUI_Utils.h"
+#include "ScriptHandler.h"
 map<string, string> text;
 
 void LoadLanguage(int lang)
@@ -7,7 +8,6 @@ void LoadLanguage(int lang)
 	text["title"] = "ONScripter-Jh for Nintendo Switch";
 
 	switch (lang) //中文
-
 	{
 	case 0:
 		text["language"] = "简体中文";
@@ -31,7 +31,7 @@ void LoadLanguage(int lang)
 		text["msg_no"] = "取消";
 
 		text["help_title"] = "游戏中操作帮助";
-		text["help_A"] = "下一页、确定、选中";
+		text["help_A"] = "确定选中项、下一页";
 		text["help_B"] = "按下快进";
 		text["help_X"] = "下一页";
 		text["help_Y"] = "显示、隐藏菜单";
@@ -41,7 +41,7 @@ void LoadLanguage(int lang)
 		text["help_RIGHT"] = "回想模式：下一页";
 		text["help_L"] = "改变文本显示速度";
 		text["help_R"] = "快进模式开关";
-		text["help_LS"] = "按下：显示、隐藏焦点框";
+		text["help_LS"] = "移动鼠标  按下：显示/隐藏";
 		text["help_RS"] = "同方向键";
 		text["help_screen"] = "截屏键：截取当前画面";
 
@@ -50,6 +50,10 @@ void LoadLanguage(int lang)
 		text["setting_gui"] = "启动器设置";
 		text["setting_language"] = "语言：";
 		text["setting_darkmode"] = "夜间模式：";
+		text["setting_iconstyle"] = "菜单样式：";
+
+		text["setting_text_top"] = "上方";
+		text["setting_text_down"] = "下方";
 		text["setting_game"] = "游戏设置";
 		text["setting_fullscreen"] = "全屏模式：";
 
@@ -77,7 +81,7 @@ void LoadLanguage(int lang)
 		text["msg_no"] = "Cancel";
 
 		text["help_title"] = "Game control help";
-		text["help_A"] = "Next page, Confirm or Selected";
+		text["help_A"] = "Select the selected item ,Next page";
 		text["help_B"] = "Press force skip";
 		text["help_X"] = "Next page";
 		text["help_Y"] = "Show, hide menu";
@@ -87,15 +91,19 @@ void LoadLanguage(int lang)
 		text["help_RIGHT"] = "Log mode: next page";
 		text["help_L"] = "Change the text display speed";
 		text["help_R"] = "Switch force skip mode ";
-		text["help_LS"] = "Press: show or hide the focus frame";
+		text["help_LS"] = "Move mouse ,press: show/hide";
 		text["help_RS"] = "Same direction key";
 		text["help_screen"] = "Screenshot: save the current screen";
-		
+
 		text["on"] = "ON";
 		text["off"] = "OFF";
 		text["setting_gui"] = "Gui Setting";
 		text["setting_language"] = "Language: ";
 		text["setting_darkmode"] = "DarkTheme: ";
+		text["setting_iconstyle"] = "Menu Style: ";
+
+		text["setting_text_top"] = "Top";
+		text["setting_text_down"] = "Bottom";
 		text["setting_game"] = "Game Setting";
 		text["setting_fullscreen"] = "FullScreen: ";
 
@@ -130,9 +138,6 @@ text["help_screen"] ="Screenshot: save the current screen";
 	}
 }
 
-void ReadConfig(string file)
-{
-}
 /*
 void WriteCmd(string file, vector<string> cmd_list) {
 	Config cfg;
@@ -183,29 +188,31 @@ int GetGameDir(string path, vector<string> &list)
 	closedir(dir);
 	return list.size();
 }
-string GetFileName(string path){
-	int pos=path.find_last_of('/');
-	if(pos >=0 && pos < (int)path.length())
-		return path.substr(pos+1);
+string GetFileName(string path)
+{
+	int pos = path.find_last_of('/');
+	if (pos >= 0 && pos < (int)path.length())
+		return path.substr(pos + 1);
 	else
 		return "";
 }
-string GetFullPath(string path){
-	int pos=path.find_last_of('/');
-	if(pos >=0 && pos < (int)path.length())
-		return path.substr(0,pos);
+string GetFullPath(string path)
+{
+	int pos = path.find_last_of('/');
+	if (pos >= 0 && pos < (int)path.length())
+		return path.substr(0, pos);
 	else
 		return "";
 }
-string GetExtensions(string path){
-	int pos=path.find_last_of('.');
-	if(pos >=0 && pos < (int)path.length())
-		return path.substr(pos+1);
+string GetExtensions(string path)
+{
+	int pos = path.find_last_of('.');
+	if (pos >= 0 && pos < (int)path.length())
+		return path.substr(pos + 1);
 	else
 		return "";
-	
 }
-bool CheckScript(string path, vector<string>& files)
+bool CheckScript(string path, vector<string> &files)
 {
 	files.clear();
 	DIR *dir;
@@ -337,8 +344,6 @@ void WriteData()
 			cout << path + onsdata[i].name << endl;
 		}
 	}
-	
-
 }
 
 string GetCurrentTime(bool second)
@@ -351,11 +356,11 @@ string GetCurrentTime(bool second)
 	char timestr[12];
 	if (second)
 	{
-		snprintf(timestr,10, "%02d:%02d:%02d", h, min, s);
+		snprintf(timestr, 10, "%02d:%02d:%02d", h, min, s);
 	}
 	else
 	{
-		snprintf(timestr,6, "%02d:%02d", h, min);
+		snprintf(timestr, 6, "%02d:%02d", h, min);
 	}
 	return std::string(timestr);
 }
@@ -369,12 +374,12 @@ string GetCurrentDate(bool isyear)
 	char timestr[12];
 	if (isyear)
 	{
-		snprintf(timestr,10, "%02d-%02d-%02d", year, mon, day);
+		snprintf(timestr, 10, "%02d-%02d-%02d", year, mon, day);
 		//2019-6-11 18:56:32
 	}
 	else
 	{
-		snprintf(timestr,6, "%02d-%02d", mon, day);
+		snprintf(timestr, 6, "%02d-%02d", mon, day);
 	}
 	return std::string(timestr);
 }
@@ -395,9 +400,8 @@ bool IsCharging()
 
 void WriteConfig(bool default0)
 {
-	string fn = DATA_PATH;
-	fn += "setting.txt";
-	
+	string fn = string(DATA_PATH) + "/setting.txt";
+
 	if (default0)
 	{
 
@@ -409,10 +413,10 @@ void WriteConfig(bool default0)
 			const Setting &t_gui = t_root["gui"];
 			int t_ver = 0;
 			t_gui.lookupValue("version", t_ver);
-			if(t_ver==GUI_VERSION)
+			if (t_ver == GUI_VERSION)
 				return;
 		}
-		
+
 		//cfg.setOptions(Config::OptionFsync | Config::OptionSemicolonSeparators | Config::OptionColonAssignmentForGroups | Config::OptionOpenBraceOnSeparateLine);
 		Config cfg;
 		Setting &root = cfg.getRoot();
@@ -420,13 +424,16 @@ void WriteConfig(bool default0)
 		gui.add("version", Setting::TypeInt) = GUI_VERSION;
 		gui.add("language", Setting::TypeInt) = Chinese;
 		gui.add("darkmode", Setting::TypeInt) = 0;
-
+		gui.add("iconstyle", Setting::TypeInt) = 0;
+		gui.add("lastselect", Setting::TypeInt) = 0;
 		Setting &game = root.add("game", Setting::TypeGroup);
 		game.add("fullscreen", Setting::TypeInt) = 1;
 
 		cfg.writeFile(fn.c_str());
-		printf("init setting: version:%d\n",GUI_VERSION);
-	}else{
+		printf("init setting: version:%d\n", GUI_VERSION);
+	}
+	else
+	{
 
 		Config cfg;
 		Setting &root = cfg.getRoot();
@@ -434,20 +441,18 @@ void WriteConfig(bool default0)
 		gui.add("version", Setting::TypeInt) = GUI_VERSION;
 		gui.add("language", Setting::TypeInt) = settings["language"];
 		gui.add("darkmode", Setting::TypeInt) = settings["darkmode"];
-
+		gui.add("iconstyle", Setting::TypeInt) = settings["iconstyle"];
+		gui.add("lastselect", Setting::TypeInt) = settings["lastselect"];
 		Setting &game = root.add("game", Setting::TypeGroup);
 		game.add("fullscreen", Setting::TypeInt) = settings["fullscreen"];
 
 		cfg.writeFile(fn.c_str());
-		printf("save setting: language:%d darkmode:%d fullscreen:%d\n",settings["language"],settings["darkmode"],settings["fullscreen"]);
-		
+		//printf("save setting: language:%d darkmode:%d iconstyle:%d fullscreen:%d\n", settings["language"], settings["darkmode"], settings["iconstyle"], settings["fullscreen"]);
 	}
-	
 }
 void LoadConfig()
 {
-	string fn = DATA_PATH;
-	fn += "setting.txt";
+	string fn = string(DATA_PATH) + "/setting.txt";
 	if (CheckFile(fn) < 0)
 		exit(0);
 	Config cfg;				  //1.声明 Config对象
@@ -458,6 +463,14 @@ void LoadConfig()
 	//settings["language"]
 	gui.lookupValue("language", settings["language"]);
 	gui.lookupValue("darkmode", settings["darkmode"]);
+	gui.lookupValue("iconstyle", settings["iconstyle"]);
+	gui.lookupValue("lastselect", settings["lastselect"]);
 	game.lookupValue("fullscreen", settings["fullscreen"]);
-	printf("load setting: language:%d darkmode:%d fullscreen:%d\n",settings["language"],settings["darkmode"],settings["fullscreen"]);
+	//printf("load setting: language:%d darkmode:%d iconstyle:%d fullscreen:%d\n", settings["language"], settings["darkmode"], settings["iconstyle"], settings["fullscreen"]);
+}
+void PreLoadScript(string path, script_t &info)
+{
+
+	//ScriptHandler sh;
+	//sh.openScript("11");
 }

@@ -49,6 +49,7 @@ private:
 		BEGIN,
 		LANGUAGE,
 		DARKMODE,
+		ICONSTYLE,
 		FULLSCREEN,
 		END,
 	};

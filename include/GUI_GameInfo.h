@@ -15,10 +15,6 @@
 
 using namespace std;
 
-struct dir_ifno
-{
-
-};
 
 
 class OnsGameInfo {

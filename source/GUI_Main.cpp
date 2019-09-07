@@ -22,6 +22,7 @@ GUIMain::GUIMain()
 	pu::element::Button *button;
 	pu::element::Rectangle *rect;
 
+
 	pu::render::SetDefaultFontFromShared(pu::render::SharedFont::ChineseSimplified);
 	//this->SetFPS(60);
 
@@ -31,29 +32,29 @@ GUIMain::GUIMain()
 	this->AddThread(std::bind(&WindowLayout::Update, window_layout));
 
 	//-----------------------顶部栏--------------------------------
-	int x = LEFT;
+	int x = LEFT_SIZE;
 	//顶部区域
 	rect = new pu::element::Rectangle(0, 0, SCREEN_WIDTH, TOP_HEIGHT, {255, 255, 255, 128}, 0);
 	this->window_layout->Add(rect);
 
 	//顶部标题
-	textblock = new pu::element::TextBlock(x, TOP, text["title"]);
+	textblock = new pu::element::TextBlock(x, TOP_SIZE, text["title"]);
 	this->window_layout->Add(textblock);
 
 	//顶部版本号
-	x += textblock->GetWidth() + LEFT * 2;
-	textblock = new pu::element::TextBlock(x, TOP, text["txt_version"] + text["version"]);
+	x += textblock->GetWidth() + LEFT_SIZE * 2;
+	textblock = new pu::element::TextBlock(x, TOP_SIZE, text["txt_version"] + text["version"]);
 	this->window_layout->Add(textblock);
 
 	//电池、时间
-	x = SCREEN_WIDTH - BATTERY_WIDTH - LEFT;
-	this->battery_rect = new pu::element::Rectangle(x, TOP / 2, BATTERY_WIDTH + 6, BATTERY_HEIGHT + 8, {48, 48, 48, 200}, 0);
-	this->battery_bar = new pu::element::Rectangle(x + 3, TOP / 2 + 4, BATTERY_WIDTH, BATTERY_HEIGHT, {0, 220, 0, 255}, 0);
-	this->battery_text = new pu::element::TextBlock(0, TOP, "100%");
-	x -= (LEFT + battery_text->GetWidth());
+	x = SCREEN_WIDTH - BATTERY_WIDTH - LEFT_SIZE;
+	this->battery_rect = new pu::element::Rectangle(x, TOP_SIZE / 2, BATTERY_WIDTH + 6, BATTERY_HEIGHT + 8, {48, 48, 48, 200}, 0);
+	this->battery_bar = new pu::element::Rectangle(x + 3, TOP_SIZE / 2 + 4, BATTERY_WIDTH, BATTERY_HEIGHT, {0, 220, 0, 255}, 0);
+	this->battery_text = new pu::element::TextBlock(0, TOP_SIZE, "100%");
+	x -= (LEFT_SIZE + battery_text->GetWidth());
 	this->battery_text->SetX(x);
-	x -= (100 + LEFT);
-	this->time_text = new pu::element::TextBlock(x, TOP, "00:00");
+	x -= (100 + LEFT_SIZE);
+	this->time_text = new pu::element::TextBlock(x, TOP_SIZE, "00:00");
 
 	this->window_layout->Add(battery_rect);
 	this->window_layout->Add(battery_bar);
@@ -88,7 +89,7 @@ void GUIMain::OnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 	default:
 		break;
 	}
-
+	//reload
 	if (Down & KEY_MINUS)
 	{
 		this->Close();

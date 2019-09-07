@@ -3,9 +3,9 @@
 
 #define		SCREEN_WIDTH		1280
 #define		SCREEN_HEIGHT		720
-#define		LEFT				8
+#define		LEFT_SIZE			8
 #define		TOP_HEIGHT			40
-#define		TOP					8
+#define		TOP_SIZE				8
 #define		BOTTOM_HEIGHT		40
 #define		BOTTOM				( SCREEN_HEIGHT - BOTTOM_HEIGHT )
 
@@ -23,7 +23,7 @@
 
 #define     HELP_WINDOW_LEFT        0
 #define     HELP_WINDOW_WIDTH       ( SCREEN_WIDTH / 3 )
-#define     SETTING_WINDOW_LEFT     ( SCREEN_WIDTH * 2 / 3 )
+#define     SETTING_WINDOW_LEFT     ( SCREEN_WIDTH * 2 / 3 + 1)
 #define     SETTING_WINDOW_WIDTH    ( SCREEN_WIDTH / 3 )
 #define     WINDOW_HEIGHT           ( SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT )
 //┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

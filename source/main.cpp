@@ -14,7 +14,6 @@ extern "C"
 		Result rc = smInitialize();
 		if (R_FAILED(rc))
 			fatalSimple(MAKERESULT(Module_Libnx, LibnxError_InitFail_SM));
-
 		rc = setsysInitialize();
 		if (R_SUCCEEDED(rc))
 		{
@@ -24,11 +23,9 @@ extern "C"
 				hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
 			setsysExit();
 		}
-		
 		rc = timeInitialize();
 		if (R_FAILED(rc))
 			fatalSimple(MAKERESULT(Module_Libnx, LibnxError_InitFail_Time));
-
 		__libnx_init_time();
 
 		rc = fsInitialize();
@@ -44,10 +41,9 @@ GUIMain *gmain;
 map<string,int> settings; 
 bool loop_exit = false;
 
-
-
 void RunGame(OnsGameInfo *info)
 {
+	WriteConfig();
 	int opt = gmain->CreateShowDialog(text["msg_tip_run"], "", {text["msg_run"], text["msg_no"]}, true); // (using latest option as cancel option)
 	if(opt==0){
 		printf("Run Game :%s\n", info->GetPath().c_str());
@@ -57,7 +53,6 @@ void RunGame(OnsGameInfo *info)
 		gmain->Close();
 		loop_exit = true;
 	}
-
 	/*Write StartUp Info*/
 	//loop_exit = true;
 	//gmain->Close();
@@ -65,7 +60,6 @@ void RunGame(OnsGameInfo *info)
 	//twiliExit();
 	//exit(0);
 }
-
 
 static void *ghaddr;
 int main(int argc, char *argv[])
@@ -100,8 +94,8 @@ int main(int argc, char *argv[])
 		printf("bpc error!\n");
 	if (R_FAILED(nifmInitialize()))
 		printf("nifm error!\n");
-	
-	
+
+
 
 	//argv[0] = (char*)"sdmc:/onsemu/hanchan/arc.nsa";
 	//nsadec_main(argv[0]);
@@ -135,6 +129,6 @@ int main(int argc, char *argv[])
 	appletExit();
 	svcSetHeapSize(&ghaddr, ((u8 *)envGetHeapOverrideAddr() + envGetHeapOverrideSize()) - (u8 *)ghaddr);
 	twiliExit();
-	
+
 	return 0;
 }
