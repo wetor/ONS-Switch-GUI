@@ -15,7 +15,13 @@
 
 using namespace std;
 
-
+struct script_t{
+	//*define
+	int w,h;
+	string caption;
+	string versionstr;
+	//*start
+};
 
 class OnsGameInfo {
 public:
@@ -37,6 +43,8 @@ private:
 	vector<string> icon_path;
 	string start_time;
 	vector<string> files;
+	script_t script_info;
+	
 };
 class KrkrGameInfo {
 public:

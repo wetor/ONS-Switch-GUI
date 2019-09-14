@@ -21,7 +21,7 @@ public:
 	void ShowSetting(bool is_show);
 	bool isShowSetting(){ return is_show_setting; }
 	void SettingOnInput(u64 Down, u64 Up, u64 Held, bool Touch);
-
+	pu::element::TYPE GetMeunType();
 
 
 private:
@@ -34,6 +34,7 @@ private:
 	map<int,int> button_index; 
 	vector<pu::element::Element *> menu_elms;
 	pu::element::MenuEX *menu;
+
 	
 	/*帮助窗口 左侧 半屏幕*/
 	bool is_show_help = false;

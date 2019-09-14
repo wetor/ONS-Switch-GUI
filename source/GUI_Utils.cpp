@@ -1,5 +1,4 @@
 #include "GUI_Utils.h"
-#include "ScriptHandler.h"
 map<string, string> text;
 
 void LoadLanguage(int lang)
@@ -12,6 +11,8 @@ void LoadLanguage(int lang)
 	case 0:
 		text["language"] = "简体中文";
 		text["version"] = "内测 0.1";
+
+		text["license"] = "ONS GameBrowser  created by wetor (http://www.wetor.top)";
 		text["txt_version"] = "版本:";
 		text["btn_help"] = "游戏帮助";
 		text["btn_ok"] = "确认/开始";
@@ -62,6 +63,8 @@ void LoadLanguage(int lang)
 	default:
 		text["language"] = "English";
 		text["version"] = "alpha 0.1";
+		text["license"] = "ONS GameBrowser  created by wetor (http://www.wetor.top)";
+
 		text["txt_version"] = "Version:";
 		text["btn_help"] = "Help";
 		text["btn_ok"] = "Confirm";
@@ -212,16 +215,17 @@ string GetExtensions(string path)
 	else
 		return "";
 }
-bool CheckScript(string path, vector<string> &files)
+string CheckScript(string path, vector<string> &files)
 {
 	files.clear();
 	DIR *dir;
 	struct dirent *ptr;
 	if ((dir = opendir(path.c_str())) == NULL)
 	{
-		return false;
+		return "";
 	}
 	bool exist = false;
+	string script = "";
 	while ((ptr = readdir(dir)) != NULL)
 	{
 		if (ptr->d_type == 8) //file
@@ -240,13 +244,16 @@ bool CheckScript(string path, vector<string> &files)
 				files.push_back(ptr->d_name);
 		}
 		if (exist)
+		{
+			script = string(ptr->d_name);
 			break;
+		}
 	}
 	closedir(dir);
 	if (exist)
-		return true;
+		return script;
 	else
-		return false;
+		return "";
 }
 
 int GetGameIcon(string path, vector<string> &list)
@@ -468,9 +475,271 @@ void LoadConfig()
 	game.lookupValue("fullscreen", settings["fullscreen"]);
 	//printf("load setting: language:%d darkmode:%d iconstyle:%d fullscreen:%d\n", settings["language"], settings["darkmode"], settings["iconstyle"], settings["fullscreen"]);
 }
+#define SKIP_SPACE(p)                   \
+	while (*(p) == ' ' || *(p) == '\t') \
+	(p)++
+#define IS_TWO_BYTE(x) \
+	(((unsigned char)(x) > (unsigned char)0x80) && ((unsigned char)(x) != (unsigned char)0xff))
+
+void PreLoadScreen(char *script_buffer, int script_buffer_length, int &screen_width, int &screen_height)
+{
+	screen_width  = 640;
+    screen_height = 480;
+	int variable_range = 4096;
+	int global_variable_border = 200;
+
+	char *buf = script_buffer;
+	while (buf < script_buffer + script_buffer_length)
+	{
+		if (*buf == ';')
+			break;
+		if (IS_TWO_BYTE(*buf))
+			buf++;
+		buf++;
+	}
+
+	while (++buf >= script_buffer + script_buffer_length)
+		return;
+
+	SKIP_SPACE(buf);
+	bool config_flag = false;
+	if (buf[0] == '$')
+	{
+		config_flag = true;
+		buf++;
+	}
+
+	while (*buf && *buf != 0x0a)
+	{
+		SKIP_SPACE(buf);
+		if (!strncmp(buf, "mode", 4))
+		{
+			buf += 4;
+			if (!strncmp(buf, "800", 3))
+			{
+				screen_width = 800;
+				screen_height = 600;
+				buf += 3;
+			}
+			else if (!strncmp(buf, "400", 3))
+			{
+				screen_width = 400;
+				screen_height = 300;
+				buf += 3;
+			}
+			else if (!strncmp(buf, "320", 3))
+			{
+				screen_width = 320;
+				screen_height = 240;
+				buf += 3;
+			}
+			else
+				break;
+		}
+		else if (!strncmp(buf, "value", 5) ||
+				 *buf == 'g' || *buf == 'G')
+		{
+			if (*buf == 'g' || *buf == 'G')
+				buf++;
+			else
+				buf += 5;
+			SKIP_SPACE(buf);
+			global_variable_border = 0;
+			while (*buf >= '0' && *buf <= '9')
+				global_variable_border = global_variable_border * 10 + *buf++ - '0';
+		}
+		else if (*buf == 'v' || *buf == 'V')
+		{
+			buf++;
+			SKIP_SPACE(buf);
+			variable_range = 0;
+			while (*buf >= '0' && *buf <= '9')
+				variable_range = variable_range * 10 + *buf++ - '0';
+		}
+		else if (*buf == 's' || *buf == 'S')
+		{
+			buf++;
+			if (!(*buf >= '0' && *buf <= '9'))
+				break;
+			screen_width = 0;
+			while (*buf >= '0' && *buf <= '9')
+				screen_width = screen_width * 10 + *buf++ - '0';
+			while (*buf == ',' || *buf == ' ' || *buf == '\t')
+				buf++;
+			screen_height = 0;
+			while (*buf >= '0' && *buf <= '9')
+				screen_height = screen_height * 10 + *buf++ - '0';
+		}
+		else if (*buf == 'l' || *buf == 'L')
+		{
+			buf++;
+			SKIP_SPACE(buf);
+			while (*buf >= '0' && *buf <= '9')
+				buf++;
+		}
+		else if (*buf != ',')
+			break;
+
+		SKIP_SPACE(buf);
+		if (!config_flag && *buf != ',')
+			break;
+		if (*buf == ',')
+			buf++;
+	}
+}
+
+//加载配置文件或预加载脚本，获取游戏信息
 void PreLoadScript(string path, script_t &info)
 {
 
-	//ScriptHandler sh;
-	//sh.openScript("11");
+	if(CheckFile(path+"/title.txt")>0){
+
+	}
+
+	vector<string> files;
+	string script_file = CheckScript(path, files);
+	files.clear();
+	int encrypt_mode = 0;
+	if (script_file == "0.txt")
+		encrypt_mode = 0;
+	else if (script_file == "00.txt")
+		encrypt_mode = 0;
+	else if (script_file == "nscr_sec.dat")
+		encrypt_mode = 2;
+	else if (script_file == "nscript.___")
+		encrypt_mode = 3;
+	else if (script_file == "nscript.dat")
+		encrypt_mode = 1;
+
+	//------------------------------------
+	FILE *fp = NULL;
+	unsigned char magic[5] = {0x79, 0x57, 0x0d, 0x80, 0x04};
+	int magic_counter = 0;
+	bool newline_flag = true;
+	bool cr_flag = false;
+	bool newlabel_flag = false;
+	int num_of_labels = 0;
+	unsigned char key_table[256];
+	for (int i = 0; i < 256; i++)
+		key_table[i] = i;
+	if ((fp = fopen(string(path + "/" + script_file).c_str(), "rb")) == NULL)
+		return;
+
+	bool read_label = false;
+	string curr_label = "";
+	string last_label = "";
+	string curr_line = "";
+	string script_buffer = "";
+	unsigned char *tmp_script_buf = new unsigned char[4096];
+
+	fseek(fp, 0, SEEK_END);
+	int estimated_buffer_length = ftell(fp) + 1;
+
+	fseek(fp, 0, SEEK_SET);
+	size_t len = 0, count = 0;
+	while (1)
+	{
+		if (len == count)
+		{
+			len = fread(tmp_script_buf, 1, 4096, fp);
+			if (len == 0)
+			{
+				if (cr_flag)
+					script_buffer += 0x0a;
+				break;
+			}
+			count = 0;
+		}
+		unsigned char ch = tmp_script_buf[count++];
+		if (encrypt_mode == 1)
+			ch ^= 0x84;
+		else if (encrypt_mode == 2)
+		{
+			ch = (ch ^ magic[magic_counter++]) & 0xff;
+			if (magic_counter == 5)
+				magic_counter = 0;
+		}
+		else if (encrypt_mode == 3)
+		{
+			ch = key_table[(unsigned char)ch] ^ 0x84;
+		}
+
+		if (cr_flag && ch != 0x0a)
+		{
+			script_buffer += 0x0a;
+			newline_flag = true;
+			cr_flag = false;
+		}
+
+		if (ch == '*' && newline_flag && !newlabel_flag)
+		{
+			num_of_labels++;
+			newlabel_flag = true;
+			read_label = true;
+		}
+		else
+		{
+			newlabel_flag = false;
+		}
+
+		if (ch == 0x0d)
+		{
+			cr_flag = true;
+			continue;
+		}
+		if (ch == 0x0a)
+		{
+			script_buffer += 0x0a;
+			newline_flag = true;
+			cr_flag = false;
+		}
+		else
+		{
+			script_buffer += ch;
+			if (ch != ' ' && ch != '\t')
+				newline_flag = false;
+		}
+		if (read_label)
+		{
+			curr_label += ch;
+			if (newline_flag)
+			{
+				if (last_label.substr(0, 7) == "*define") //上一个标签是define
+					break;
+				//cout << curr_label << endl;
+				last_label = curr_label;
+				curr_label = "";
+				read_label = false;
+			}
+		}
+		if (newline_flag)
+		{
+			if (curr_line.substr(0, 10) == "versionstr")
+			{
+				int a = curr_line.find('\"');
+				info.versionstr = curr_line.substr(a + 1, curr_line.find('\"', a + 1) - a - 1);
+			}
+			if (curr_line.substr(0, 7) == "caption")
+			{
+				int a = curr_line.find('\"');
+				info.caption = curr_line.substr(a + 1, curr_line.find('\"', a + 1) - a - 1);
+				break;
+			}
+			curr_line = "";
+		}
+		else
+		{
+			curr_line += ch;
+		}
+	}
+
+	script_buffer += 0x0a;
+
+	fclose(fp);
+	delete[] tmp_script_buf;
+
+	//printf("%s\n", string(path + "/" + script_file).c_str());
+	//printf("script length:%d\n", script_buffer.length());
+	PreLoadScreen((char *)script_buffer.c_str(), script_buffer.length(), info.w, info.h);
+	//printf("%s %s %d %d\n", info.versionstr.c_str(), info.caption.c_str(), info.w, info.h);
 }

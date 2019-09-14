@@ -22,7 +22,6 @@ GUIMain::GUIMain()
 	pu::element::Button *button;
 	pu::element::Rectangle *rect;
 
-
 	pu::render::SetDefaultFontFromShared(pu::render::SharedFont::ChineseSimplified);
 	//this->SetFPS(60);
 
@@ -60,11 +59,36 @@ GUIMain::GUIMain()
 	this->window_layout->Add(battery_bar);
 	this->window_layout->Add(battery_text);
 	this->window_layout->Add(time_text);
-	this->SetOnInput(std::bind(&GUIMain::OnInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3,std::placeholders::_4));
+	this->SetOnInput(std::bind(&GUIMain::OnInput, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+
+	//-----------------------其他----------------------------------
+
+	license_text = new pu::element::TextBlock(0, 0, text["license"]);
+
+	license_text->SetFont(pu::render::LoadSharedFont(pu::render::SharedFont::ChineseSimplified, 16));
+	license_text->SetColor({0x7F, 0x7F, 0x7F, 0xEE});
+	license_text->SetX((SCREEN_WIDTH - license_text->GetWidth()) / 2);
+
+	int t_top = TOP_HEIGHT + 10;
+	switch (this->window_layout->GetMeunType())
+	{
+	case pu::element::TYPE::TOP:
+		t_top = BOTTOM - license_text->GetHeight() - TOP_SIZE;
+		break;
+	case pu::element::TYPE::DOWN:
+		t_top = TOP_HEIGHT + TOP_SIZE;
+		break;
+	default:
+		break;
+	}
+	license_text->SetY(t_top);
+	
+	
+
+	this->window_layout->Add(license_text);
 
 	curr_layout = CURR_LAYOUT::WINDOW;
 	this->LoadLayout(window_layout);
-
 }
 void GUIMain::OnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 {
@@ -133,4 +157,19 @@ void GUIMain::Update()
 	sprintf(batterystr, "%d%%", battery_value);
 	battery_text->SetText(std::string(batterystr));
 	delete batterystr;
+
+
+	int t_top = TOP_HEIGHT + 10;
+	switch (this->window_layout->GetMeunType())
+	{
+	case pu::element::TYPE::TOP:
+		t_top = BOTTOM - license_text->GetHeight() - TOP_SIZE;
+		break;
+	case pu::element::TYPE::DOWN:
+		t_top = TOP_HEIGHT + TOP_SIZE;
+		break;
+	default:
+		break;
+	}
+	license_text->SetY(t_top);
 }

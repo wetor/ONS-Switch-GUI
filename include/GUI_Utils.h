@@ -12,6 +12,9 @@
 #include <sys/stat.h>
 #include <fstream>
 
+#include <locale>
+#include <codecvt>
+
 #include <switch.h>
 
 
@@ -101,13 +104,7 @@ enum LANGUAGE{
 	Other
 };
 
-struct script_t{
-	//*define
-	int w,h;
-	string caption;
-	string versionstr;
-	//*start
-};
+
 
 extern bool loop_exit;
 
@@ -122,7 +119,7 @@ extern void LoadLanguage(int lang = 0);
 extern int GetGameDir(string path, vector<string> &dirpath);
 extern int GetGameIcon(string path, vector<string>&list);
 
-extern bool CheckScript(string path, vector<string>& files);
+extern string CheckScript(string path, vector<string>& files);
 extern int CheckFile(string path);
 extern bool CheckDir(string path);
 
@@ -141,3 +138,5 @@ extern string GetCurrentTime(bool second = false);
 extern string GetCurrentDate(bool isyear = true);
 extern int GetBatteryLevel();
 extern bool IsCharging();
+
+extern void PreLoadScript(string path, script_t &info);

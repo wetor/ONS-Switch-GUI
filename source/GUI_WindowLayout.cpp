@@ -1,5 +1,8 @@
 #include "GUI_WindowLayout.h"
 
+pu::element::TYPE WindowLayout::GetMeunType(){
+	return menu->GetType();
+}
 WindowLayout::WindowLayout()
 {
 	if (settings["darkmode"])

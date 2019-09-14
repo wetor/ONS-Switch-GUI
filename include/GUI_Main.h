@@ -30,6 +30,8 @@ private:
 	pu::element::TextBlock *time_text;
 	pu::element::TextBlock *battery_text;
 
+	pu::element::TextBlock *license_text;
+
 	pu::draw::Color bg_color;
 
 	// Layout instance
