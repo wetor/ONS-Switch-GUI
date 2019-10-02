@@ -1,48 +1,49 @@
 #include "GUI_WindowLayout.h"
 
-pu::element::TYPE WindowLayout::GetMeunType(){
+pu::ui::elm::TYPE WindowLayout::GetMeunType()
+{
 	return menu->GetType();
 }
 WindowLayout::WindowLayout()
 {
 	if (settings["darkmode"])
 	{
-		text_color = pu::draw::Color(255, 255, 255, 255);
+		text_color = pu::ui::Color(255, 255, 255, 255);
 	}
 	else
 	{
-		text_color = pu::draw::Color(0, 0, 0, 255);
+		text_color = pu::ui::Color(0, 0, 0, 255);
 	}
 
 	menu_elms.clear();
 	help_elms.clear();
 	setting_elms.clear();
 
-	pu::element::Image *image;
-	pu::element::TextBlock *textblock;
-	pu::element::Button *button;
-	pu::element::Rectangle *rect;
+	pu::ui::elm::Image::Ref image;
+	pu::ui::elm::TextBlock::Ref textblock;
+	pu::ui::elm::Button::Ref button;
+	pu::ui::elm::Rectangle::Ref rect;
 
 	string path = string(DATA_PATH) + "/";
 
-	menu = new pu::element::MenuEX(0, TOP_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT, pu::draw::Color(150, 150, 150, 100), ICON_SIZE, ICON_SELECT_SIZE, ICON_NUM);
+	menu = pu::ui::elm::MenuEX::New(0, TOP_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - TOP_HEIGHT - BOTTOM_HEIGHT, pu::ui::Color(150, 150, 150, 100), ICON_SIZE, ICON_SELECT_SIZE, ICON_NUM);
 
 	switch (settings["iconstyle"])
 	{
 	case 0:
-		menu->SetType(pu::element::TYPE::DOWN);
+		menu->SetType(pu::ui::elm::TYPE::DOWN);
 		break;
 	case 1:
-		menu->SetType(pu::element::TYPE::TOP);
+		menu->SetType(pu::ui::elm::TYPE::TOP);
 		break;
 	default:
 		settings["iconstyle"] = 0;
-		menu->SetType(pu::element::TYPE::DOWN);
+		menu->SetType(pu::ui::elm::TYPE::DOWN);
 		break;
 	}
 
 	int x = 0, y = 0;
-	pu::element::MenuItem *item;
+	pu::ui::elm::MenuItem::Ref item;
 	vector<string> dirpath;
 	GetGameDir(PATH, dirpath);
 
@@ -50,7 +51,7 @@ WindowLayout::WindowLayout()
 	{
 		OnsGameInfo *info_tmp = new OnsGameInfo(dirpath[i]);
 		game_list.push_back(info_tmp);
-		item = new pu::element::MenuItem(game_list[i]->GetName());
+		item = pu::ui::elm::MenuItem::New(game_list[i]->GetName());
 		item->SetColor(text_color);
 		item->SetIcon(game_list[i]->GetIconPath(0));
 		string gamepath = this->game_list[i]->GetPath();
@@ -67,7 +68,7 @@ WindowLayout::WindowLayout()
 	menu_elms.push_back(menu);
 	if (dirpath.empty())
 	{
-		textblock = new pu::element::TextBlock(0, 0, text["txt_nogame"]);
+		textblock = pu::ui::elm::TextBlock::New(0, 0, text["txt_nogame"]);
 		x = (SCREEN_WIDTH - textblock->GetWidth()) / 2;
 		textblock->SetX(x);
 		x = (SCREEN_HEIGHT - textblock->GetHeight()) / 2;
@@ -80,17 +81,17 @@ WindowLayout::WindowLayout()
 	now_select = 0;
 
 	//-----------------浏览框 左右 图标-------------------
-	rect = new pu::element::Rectangle(5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, BUTTON_HEIGHT, BUTTON_HEIGHT, {255, 255, 255, 128}, 0);
+	rect = pu::ui::elm::Rectangle::New(5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, BUTTON_HEIGHT, BUTTON_HEIGHT, pu::ui::Color(255, 255, 255, 128), 0);
 	this->Add(rect);
 
-	image = new pu::element::Image(5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, path + onsdata[OKEY_DLEFT].name);
+	image = pu::ui::elm::Image::New(5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, path + onsdata[OKEY_DLEFT].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
 
-	rect = new pu::element::Rectangle(SCREEN_WIDTH - BUTTON_HEIGHT - 5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, BUTTON_HEIGHT, BUTTON_HEIGHT, {255, 255, 255, 128}, 0);
+	rect = pu::ui::elm::Rectangle::New(SCREEN_WIDTH - BUTTON_HEIGHT - 5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, BUTTON_HEIGHT, BUTTON_HEIGHT, pu::ui::Color(255, 255, 255, 128), 0);
 	this->Add(rect);
-	image = new pu::element::Image(SCREEN_WIDTH - BUTTON_HEIGHT - 5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, path + onsdata[OKEY_DRIGHT].name);
+	image = pu::ui::elm::Image::New(SCREEN_WIDTH - BUTTON_HEIGHT - 5, TOP_HEIGHT + ICON_SELECT_SIZE - BUTTON_HEIGHT - 5, path + onsdata[OKEY_DRIGHT].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
@@ -99,15 +100,15 @@ WindowLayout::WindowLayout()
 	x = LEFT_SIZE;
 	y = BUTTON_BOTTOM;
 
-	rect = new pu::element::Rectangle(0, BOTTOM, SCREEN_WIDTH, BOTTOM_HEIGHT, {255, 255, 255, 128}, 0);
+	rect = pu::ui::elm::Rectangle::New(0, BOTTOM, SCREEN_WIDTH, BOTTOM_HEIGHT, pu::ui::Color(255, 255, 255, 128), 0);
 	this->Add(rect);
 
 	//L 帮助
-	image = new pu::element::Image(x, y, path + onsdata[OKEY_L].name);
+	image = pu::ui::elm::Image::New(x, y, path + onsdata[OKEY_L].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	button = new pu::element::Button(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_help"], {0, 0, 0, 255}, {255, 255, 255, 0});
+	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_help"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	button->SetOnClick([&]() {
 		this->ShowHelp(!isShowHelp());
 	});
@@ -117,11 +118,11 @@ WindowLayout::WindowLayout()
 
 	//A 确定
 	x += (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT_SIZE * 2;
-	image = new pu::element::Image(x, y, path + onsdata[OKEY_A].name);
+	image = pu::ui::elm::Image::New(x, y, path + onsdata[OKEY_A].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_ok"], {0, 0, 0, 255}, {255, 255, 255, 0});
+	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_ok"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	button->SetOnClick([&]() {
 		RunGame(game_list[menu->GetSelectedIndex()]); //启动游戏
 	});
@@ -131,11 +132,11 @@ WindowLayout::WindowLayout()
 
 	//B 取消
 	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT_SIZE * 2;
-	image = new pu::element::Image(x, y, path + onsdata[OKEY_B].name);
+	image = pu::ui::elm::Image::New(x, y, path + onsdata[OKEY_B].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_back"], {0, 0, 0, 255}, {255, 255, 255, 0});
+	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_back"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	button->SetOnClick([&] {
 		if (this->isShowHelp())
 			this->ShowHelp(false);
@@ -148,44 +149,44 @@ WindowLayout::WindowLayout()
 
 	//Y 信息
 	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT_SIZE * 2;
-	image = new pu::element::Image(x, y, path + onsdata[OKEY_Y].name);
+	image = pu::ui::elm::Image::New(x, y, path + onsdata[OKEY_Y].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	button = new pu::element::Button(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_info"], {0, 0, 0, 255}, {255, 255, 255, 0});
+	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH), BUTTON_HEIGHT, text["btn_info"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	this->Add(button);
 	button_index[OKEY_Y] = menu_elms.size();
 	menu_elms.push_back(button);
 
 	//X 资源
 	x += (settings["language"] == English ? BUTTON_WIDTH * 3 / 5 : BUTTON_WIDTH) + BUTTON_HEIGHT + LEFT_SIZE * 2;
-	image = new pu::element::Image(x, y, path + onsdata[OKEY_X].name);
+	image = pu::ui::elm::Image::New(x, y, path + onsdata[OKEY_X].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_res"], {0, 0, 0, 255}, {255, 255, 255, 0});
+	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_res"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	this->Add(button);
 	button_index[OKEY_X] = menu_elms.size();
 	menu_elms.push_back(button);
 
 	//R播放器
 	x += BUTTON_WIDTH + BUTTON_HEIGHT + LEFT_SIZE * 2;
-	image = new pu::element::Image(x, y, path + onsdata[OKEY_R].name);
+	image = pu::ui::elm::Image::New(x, y, path + onsdata[OKEY_R].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	button = new pu::element::Button(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_player"], {0, 0, 0, 255}, {255, 255, 255, 0});
+	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, BUTTON_WIDTH, BUTTON_HEIGHT, text["btn_player"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	this->Add(button);
 	button_index[OKEY_R] = menu_elms.size();
 	menu_elms.push_back(button);
 
 	//+ 设置
 	x = SCREEN_WIDTH - BUTTON_HEIGHT - LEFT_SIZE - (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2);
-	image = new pu::element::Image(x, y, path + onsdata[OKEY_PLUS].name);
+	image = pu::ui::elm::Image::New(x, y, path + onsdata[OKEY_PLUS].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	button = new pu::element::Button(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_setting"], {0, 0, 0, 255}, {255, 255, 255, 0});
+	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_setting"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	button->SetOnClick([&] {
 		this->ShowSetting(!isShowSetting());
 	});
@@ -195,11 +196,11 @@ WindowLayout::WindowLayout()
 
 	//- 刷新
 	x -= ((settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2) + BUTTON_HEIGHT + LEFT_SIZE * 2);
-	image = new pu::element::Image(x, y, path + onsdata[OKEY_MINUS].name);
+	image = pu::ui::elm::Image::New(x, y, path + onsdata[OKEY_MINUS].name);
 	image->SetWidth(BUTTON_HEIGHT);
 	image->SetHeight(BUTTON_HEIGHT);
 	this->Add(image);
-	button = new pu::element::Button(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_refresh"], {0, 0, 0, 255}, {255, 255, 255, 0});
+	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_refresh"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	button->SetOnClick([&] {
 		loop_exit = true;
 		WriteConfig();
@@ -210,17 +211,17 @@ WindowLayout::WindowLayout()
 
 	//-----------------帮助窗口----------------------
 
-	help_window_rect = new pu::element::Rectangle(HELP_WINDOW_LEFT, TOP_HEIGHT, (settings["language"] == English ? HELP_WINDOW_WIDTH * 4 / 3 : HELP_WINDOW_WIDTH), WINDOW_HEIGHT, {50, 50, 50, 172}, 0);
+	help_window_rect = pu::ui::elm::Rectangle::New(HELP_WINDOW_LEFT, TOP_HEIGHT, (settings["language"] == English ? HELP_WINDOW_WIDTH * 4 / 3 : HELP_WINDOW_WIDTH), WINDOW_HEIGHT, pu::ui::Color(50, 50, 50, 172), 0);
 	this->Add(help_window_rect);
 	help_elms.push_back(help_window_rect);
 
-	help_window = new pu::element::Rectangle(HELP_WINDOW_LEFT + 4, TOP_HEIGHT + 4, (settings["language"] == English ? HELP_WINDOW_WIDTH * 4 / 3 : HELP_WINDOW_WIDTH) - 8, WINDOW_HEIGHT - 8, {225, 225, 225, 172}, 0);
+	help_window = pu::ui::elm::Rectangle::New(HELP_WINDOW_LEFT + 4, TOP_HEIGHT + 4, (settings["language"] == English ? HELP_WINDOW_WIDTH * 4 / 3 : HELP_WINDOW_WIDTH) - 8, WINDOW_HEIGHT - 8, pu::ui::Color(225, 225, 225, 172), 0);
 	this->Add(help_window);
 	help_elms.push_back(help_window);
 
 	x = HELP_WINDOW_LEFT + 32;
 	y = TOP_HEIGHT + 24;
-	textblock = new pu::element::TextBlock(x, y, text["help_title"]);
+	textblock = pu::ui::elm::TextBlock::New(x, y, text["help_title"]);
 	textblock->SetX((HELP_WINDOW_LEFT + HELP_WINDOW_WIDTH - textblock->GetTextWidth()) / 2);
 	this->Add(textblock);
 	help_elms.push_back(textblock);
@@ -230,48 +231,48 @@ WindowLayout::WindowLayout()
 	int tmp_okey[12] = {OKEY_A, OKEY_B, OKEY_X, OKEY_Y, OKEY_DUP, OKEY_DDOWN, OKEY_DLEFT, OKEY_DRIGHT, OKEY_L, OKEY_R, OKEY_LSTICK, OKEY_RSTICK};
 	for (int i = 0; i < 12; i++)
 	{
-		image = new pu::element::Image(x, y, path + onsdata[tmp_okey[i]].name);
+		image = pu::ui::elm::Image::New(x, y, path + onsdata[tmp_okey[i]].name);
 		image->SetWidth(BUTTON_HEIGHT);
 		image->SetHeight(BUTTON_HEIGHT);
 		this->Add(image);
 		help_elms.push_back(image);
-		textblock = new pu::element::TextBlock(x + 48, y + 3, text[tmp_text[i]]);
+		textblock = pu::ui::elm::TextBlock::New(x + 48, y + 3, text[tmp_text[i]]);
 		this->Add(textblock);
 		help_elms.push_back(textblock);
 		y += 32 + 10;
 	}
-	pu::element::Rectangle *tmp_rect = new pu::element::Rectangle(x + 2, y + 2, BUTTON_HEIGHT - 4, BUTTON_HEIGHT - 4, {0, 0, 0, 255}, 0);
+	pu::ui::elm::Rectangle::Ref tmp_rect = pu::ui::elm::Rectangle::New(x + 2, y + 2, BUTTON_HEIGHT - 4, BUTTON_HEIGHT - 4, pu::ui::Color(0, 0, 0, 255), 0);
 	this->Add(tmp_rect);
 	help_elms.push_back(tmp_rect);
-	textblock = new pu::element::TextBlock(x + 48, y + 3, text["help_screen"]);
+	textblock = pu::ui::elm::TextBlock::New(x + 48, y + 3, text["help_screen"]);
 	this->Add(textblock);
 	help_elms.push_back(textblock);
 	this->ShowHelp(false);
 
 	//-----------------设置窗口----------------------
 
-	setting_window_rect = new pu::element::Rectangle(SETTING_WINDOW_LEFT, TOP_HEIGHT, SETTING_WINDOW_WIDTH, WINDOW_HEIGHT, {50, 50, 50, 172}, 0);
+	setting_window_rect = pu::ui::elm::Rectangle::New(SETTING_WINDOW_LEFT, TOP_HEIGHT, SETTING_WINDOW_WIDTH, WINDOW_HEIGHT, pu::ui::Color(50, 50, 50, 172), 0);
 	this->Add(setting_window_rect);
 	setting_elms.push_back(setting_window_rect);
 
-	setting_window = new pu::element::Rectangle(SETTING_WINDOW_LEFT + 4, TOP_HEIGHT + 4, SETTING_WINDOW_WIDTH - 8, WINDOW_HEIGHT - 8, {225, 225, 225, 172}, 0);
+	setting_window = pu::ui::elm::Rectangle::New(SETTING_WINDOW_LEFT + 4, TOP_HEIGHT + 4, SETTING_WINDOW_WIDTH - 8, WINDOW_HEIGHT - 8, pu::ui::Color(225, 225, 225, 172), 0);
 	this->Add(setting_window);
 	setting_elms.push_back(setting_window);
 	x = SETTING_WINDOW_LEFT + SETTING_WINDOW_WIDTH / 2 / 4;
 	y = TOP_HEIGHT + 24;
 
-	textblock = new pu::element::TextBlock(x, y, text["setting_gui"]);
+	textblock = pu::ui::elm::TextBlock::New(x, y, text["setting_gui"]);
 	textblock->SetX(SETTING_WINDOW_LEFT + (SETTING_WINDOW_WIDTH - textblock->GetTextWidth()) / 2);
 	this->Add(textblock);
 	setting_elms.push_back(textblock);
 	y += 48;
 
-	button = new pu::element::Button(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_language"] + text["language"], {0, 0, 0, 255}, {255, 255, 255, 128});
+	button = pu::ui::elm::Button::New(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_language"] + text["language"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 128));
 	button->SetOnClick([&] {
 		settings["language"]++;
 		if (settings["language"] > English)
 			settings["language"] = Chinese;
-		((pu::element::Button *)setting_elms[setting_index[SETTING::LANGUAGE]])->SetContent(text["setting_language"] + text["language"]);
+		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[SETTING::LANGUAGE]])->SetContent(text["setting_language"] + text["language"]);
 		WriteConfig();
 		loop_exit = true;
 	});
@@ -280,10 +281,10 @@ WindowLayout::WindowLayout()
 	setting_elms.push_back(button);
 	y += 60;
 
-	button = new pu::element::Button(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_darkmode"] + (settings["darkmode"] ? text["on"] : text["off"]), {0, 0, 0, 255}, {255, 255, 255, 128});
+	button = pu::ui::elm::Button::New(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_darkmode"] + (settings["darkmode"] ? text["on"] : text["off"]), pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 128));
 	button->SetOnClick([&] {
 		settings["darkmode"] = !settings["darkmode"];
-		((pu::element::Button *)setting_elms[setting_index[SETTING::DARKMODE]])->SetContent(text["setting_darkmode"] + (settings["darkmode"] ? text["on"] : text["off"]));
+		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[SETTING::DARKMODE]])->SetContent(text["setting_darkmode"] + (settings["darkmode"] ? text["on"] : text["off"]));
 		WriteConfig();
 		loop_exit = true;
 	});
@@ -292,7 +293,7 @@ WindowLayout::WindowLayout()
 	setting_elms.push_back(button);
 	y += 60;
 
-	button = new pu::element::Button(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_iconstyle"] + (settings["iconstyle"] ? text["setting_text_top"] : text["setting_text_down"]), {0, 0, 0, 255}, {255, 255, 255, 128});
+	button = pu::ui::elm::Button::New(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_iconstyle"] + (settings["iconstyle"] ? text["setting_text_top"] : text["setting_text_down"]), pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 128));
 	button->SetOnClick([&] {
 		settings["iconstyle"]++;
 		focus_button = SETTING::ICONSTYLE;
@@ -301,19 +302,19 @@ WindowLayout::WindowLayout()
 		{
 		case 0:
 			str += text["setting_text_down"];
-			menu->SetType(pu::element::TYPE::DOWN);
+			menu->SetType(pu::ui::elm::TYPE::DOWN);
 			break;
 		case 1:
 			str += text["setting_text_top"];
-			menu->SetType(pu::element::TYPE::TOP);
+			menu->SetType(pu::ui::elm::TYPE::TOP);
 			break;
 		default:
 			settings["iconstyle"] = 0;
 			str += text["setting_text_down"];
-			menu->SetType(pu::element::TYPE::DOWN);
+			menu->SetType(pu::ui::elm::TYPE::DOWN);
 			break;
 		}
-		((pu::element::Button *)setting_elms[setting_index[SETTING::ICONSTYLE]])->SetContent(str);
+		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[SETTING::ICONSTYLE]])->SetContent(str);
 		WriteConfig();
 	});
 	this->Add(button);
@@ -321,21 +322,33 @@ WindowLayout::WindowLayout()
 	setting_elms.push_back(button);
 	y += 60;
 
-	textblock = new pu::element::TextBlock(x, y, text["setting_game"]);
+	textblock = pu::ui::elm::TextBlock::New(x, y, text["setting_game"]);
 	textblock->SetX(SETTING_WINDOW_LEFT + (SETTING_WINDOW_WIDTH - textblock->GetTextWidth()) / 2);
 	this->Add(textblock);
 	setting_elms.push_back(textblock);
 	y += 48;
 
-	button = new pu::element::Button(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_fullscreen"] + (settings["fullscreen"] ? text["on"] : text["off"]), {0, 0, 0, 255}, {255, 255, 255, 128});
+	button = pu::ui::elm::Button::New(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_fullscreen"] + (settings["fullscreen"] ? text["on"] : text["off"]), pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 128));
 	button->SetOnClick([&] {
 		settings["fullscreen"] = !settings["fullscreen"];
-		((pu::element::Button *)setting_elms[setting_index[SETTING::FULLSCREEN]])->SetContent(text["setting_fullscreen"] + (settings["fullscreen"] ? text["on"] : text["off"]));
+		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[SETTING::FULLSCREEN]])->SetContent(text["setting_fullscreen"] + (settings["fullscreen"] ? text["on"] : text["off"]));
 		WriteConfig();
 		focus_button = SETTING::FULLSCREEN;
 	});
 	this->Add(button);
 	setting_index[SETTING::FULLSCREEN] = setting_elms.size();
+	setting_elms.push_back(button);
+	y += 60;
+
+	button = pu::ui::elm::Button::New(x, y, SETTING_WINDOW_WIDTH * 3 / 4, BUTTON_HEIGHT + 10, text["setting_fontoutline"] + (settings["fontoutline"] ? text["on"] : text["off"]), pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 128));
+	button->SetOnClick([&] {
+		settings["fontoutline"] = !settings["fontoutline"];
+		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[SETTING::FONTOUTLINE]])->SetContent(text["setting_fontoutline"] + (settings["fontoutline"] ? text["on"] : text["off"]));
+		WriteConfig();
+		focus_button = SETTING::FONTOUTLINE;
+	});
+	this->Add(button);
+	setting_index[SETTING::FONTOUTLINE] = setting_elms.size();
 	setting_elms.push_back(button);
 	y += 60;
 
@@ -349,7 +362,7 @@ void WindowLayout::ShowHelp(bool is_show)
 	for (int i = 0; i < (int)menu_elms.size(); i++)
 	{
 		if (i == 0)
-			((pu::element::MenuEX *)menu_elms[i])->SetDisable(is_disable_menu);
+			pu::ui::elm::Element::Conv<pu::ui::elm::MenuEX>(menu_elms[i])->SetDisable(is_disable_menu);
 		else
 			menu_elms[i]->SetDisable(is_disable_menu);
 	}
@@ -399,7 +412,7 @@ void WindowLayout::ShowSetting(bool is_show)
 	for (int i = 0; i < (int)menu_elms.size(); i++)
 	{
 		if (i == 0)
-			((pu::element::MenuEX *)menu_elms[i])->SetDisable(is_disable_menu);
+			pu::ui::elm::Element::Conv<pu::ui::elm::MenuEX>(menu_elms[i])->SetDisable(is_disable_menu);
 		else
 			menu_elms[i]->SetDisable(is_disable_menu);
 	}
@@ -407,7 +420,7 @@ void WindowLayout::ShowSetting(bool is_show)
 	{
 		if (focus_button <= SETTING::BEGIN || focus_button >= SETTING::END)
 			focus_button = (SETTING)(SETTING::BEGIN + 1);
-		((pu::element::Button *)setting_elms[setting_index[focus_button]])->SetColor({0, 128, 255, 128});
+		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[focus_button]])->SetColor(pu::ui::Color(0, 128, 255, 128));
 		//+ A B 和 - 启用，其他禁止
 		menu_elms[button_index[OKEY_PLUS]]->SetDisable(false);
 		//A_button->SetDisable(false);
@@ -460,14 +473,14 @@ void WindowLayout::SettingOnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 	else if (Down & KEY_A)
 	{
 
-		((pu::element::Button *)setting_elms[setting_index[focus_button]])->OnClick();
+		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[focus_button]])->OnClick();
 	}
 	for (int i = SETTING::BEGIN + 1; i < SETTING::END; i++)
 	{
-		((pu::element::Button *)setting_elms[setting_index[(SETTING)i]])->SetColor({255, 255, 255, 128});
+		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[(SETTING)i]])->SetColor(pu::ui::Color(255, 255, 255, 128));
 	}
 
-	((pu::element::Button *)setting_elms[setting_index[focus_button]])->SetColor({0, 128, 255, 128});
+	pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[focus_button]])->SetColor(pu::ui::Color(0, 128, 255, 128));
 }
 void WindowLayout::OnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 {

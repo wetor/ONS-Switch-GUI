@@ -1,4 +1,4 @@
-#define     GUI_VERSION         11
+#define     GUI_VERSION         20
 
 
 #define		SCREEN_WIDTH		1280
@@ -37,6 +37,7 @@
 
 #define		TEMP_PATH			"sdmc:/onsemu/temp"
 #define		PATH				"sdmc:/onsemu"
+#define		EXEPATH				"sdmc:/onsemu/exefs"
 #define		DATA_PATH			"sdmc:/onsemu/onsdata"
 #define		DEFAULT_ICON		"sdmc:/onsemu/onsdata/default_icon.png"
 #define		DEFAULT_FONT		"sdmc:/onsemu/onsdata/default_font.ttf"

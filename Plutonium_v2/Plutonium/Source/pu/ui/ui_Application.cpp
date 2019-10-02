@@ -164,7 +164,7 @@ namespace pu::ui
             if(elm->IsVisible())
             {
                 elm->OnRender(this->rend, elm->GetProcessedX(), elm->GetProcessedY());
-                if(!this->rover) elm->OnInput(d, u, h, touch);
+                if(!this->rover && !elm->IsDisable()) elm->OnInput(d, u, h, touch);
             }
         }
         if(this->ovl != NULL)

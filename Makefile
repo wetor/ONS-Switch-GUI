@@ -31,19 +31,19 @@ include $(DEVKITPRO)/libnx/switch_rules
 #     - <libnx folder>/default_icon.jpg
 #---------------------------------------------------------------------------------
 
-APP_TITLE := Plutonium - Dialogs example
-APP_AUTHOR := XorTroll
-APP_VERSION := Test
+APP_TITLE := ONS Browser
+APP_AUTHOR := Wetor
+APP_VERSION := 1.1
 
 # ICON := Icon.jpg
-TARGET		:=	ONS-Switch-GUI
+TARGET		:=	ONSBrowser
 BUILD		:=	build
 SOURCES		:=	source ../ONScripter-Switch/source/reader
 DATA		:=	data
-INCLUDES	:=	include Plutonium/Plutonium/Include ../ONScripter-Switch/include
+INCLUDES	:=	include Plutonium_v2/Plutonium/Include ../ONScripter-Switch/include
 EXEFS_SRC	:=	exefs_src
 # ROMFS		:=	RomFs
-
+ICON		:= Icon.jpg
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
@@ -52,14 +52,14 @@ ARCH	:=	-march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES) $(CFLAGS)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DSWITCH
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DSWITCH 
 
 CXXFLAGS	:= $(CFLAGS) -fexceptions -fpermissive  -std=gnu++11
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -ltwili -lconfig++ \
+LIBS	:= -lconfig++ \
 		-lpu -lfreetype -lSDL2_mixer -lopusfile -lopus \
 		-lmodplug -lmpg123 -lvorbisidec -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2 \
 		-lEGL -lGLESv2 -lglapi -ldrm_nouveau -lwebp -lpng -ljpeg \
@@ -71,7 +71,7 @@ LIBS	:= -ltwili -lconfig++ \
 #---------------------------------------------------------------------------------
 
 # IMPORTANT! Change "$(CURDIR)/../../Plutonium/Output" to the path in which you have Plutonium libs.
-LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(CURDIR)/Plutonium/Plutonium/Output
+LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(CURDIR)/Plutonium_v2/Plutonium/Output
 
 
 #---------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ all: $(BUILD)
 
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
-	@$(MAKE) -C Plutonium/Plutonium/
+	@$(MAKE) -C Plutonium_v2/Plutonium/
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
@@ -204,10 +204,10 @@ $(OFILES_SRC)	: $(HFILES_BIN)
 	@echo $(notdir $<)
 	@$(bin2o)
 #---------------------------------------------------------------------------------------
-%.ttf.o	%_ttf.h :	%.ttf
+#%.ttf.o	%_ttf.h :	%.ttf
 #---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	@$(bin2o)
+#	@echo $(notdir $<)
+#	@$(bin2o)
 #---------------------------------------------------------------------------------------
 -include $(DEPENDS)
 endif

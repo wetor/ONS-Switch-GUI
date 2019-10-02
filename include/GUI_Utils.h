@@ -25,7 +25,7 @@
 #include "GUI_define.h"
 #include "GUI_GameInfo.h"
 #include "default_icon_png.h"
-#include "default_font_ttf.h"
+//#include "default_font_ttf.h"
 
 
 #include "A_png.h"
@@ -74,7 +74,7 @@ static data_t onsdata[]{
 	{(uint8_t*)RIGHT_png,RIGHT_png_size, "RIGHT.png"},
 	{(uint8_t*)DOWN_png,DOWN_png_size ,"DOWN.png"},
 	{(uint8_t*)default_icon_png,default_icon_png_size,"default_icon.png"},
-	{(uint8_t*)default_font_ttf,default_font_ttf_size,"default_font.ttf"}
+	//{(uint8_t*)default_font_ttf,default_font_ttf_size,"default_font.ttf"}
 };
 
 enum ns_data{

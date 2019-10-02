@@ -10,6 +10,7 @@ namespace pu::ui::elm
         this->h = Height;
         this->cnt = Content;
         this->clr = Color;
+        this->textclr = TextColor;
         this->hover = false;
         this->hoverfact = 255;
         this->fnt = render::LoadDefaultFont(25);
@@ -75,7 +76,7 @@ namespace pu::ui::elm
     {
         this->cnt = Content;
         render::DeleteTexture(this->ntex);
-        this->ntex = render::RenderText(this->fnt, Content, this->clr);
+        this->ntex = render::RenderText(this->fnt, Content, this->textclr);
     }
 
     Color Button::GetColor()
@@ -86,15 +87,23 @@ namespace pu::ui::elm
     void Button::SetColor(Color Color)
     {
         this->clr = Color;
+    }
+    Color Button::GetTextColor()
+    {
+        return this->textclr;
+    }
+
+    void Button::SetTextColor(Color Color)
+    {
+        this->textclr = Color;
         render::DeleteTexture(this->ntex);
         this->ntex = render::RenderText(this->fnt, this->cnt, Color);
     }
-
     void Button::SetContentFont(render::NativeFont Font)
     {
         this->fnt = Font;
         render::DeleteTexture(this->ntex);
-        this->ntex = render::RenderText(this->fnt, this->cnt, this->clr);
+        this->ntex = render::RenderText(this->fnt, this->cnt, this->textclr);
     }
 
     void Button::SetOnClick(std::function<void()> ClickCallback)
@@ -167,5 +176,8 @@ namespace pu::ui::elm
                 }
             }
         }
+    }
+    void Button::OnClick(){
+        (this->clickcb)();
     }
 }

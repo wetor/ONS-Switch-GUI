@@ -1,6 +1,8 @@
 #include "GUI_Main.h"
 #include <switch.h>
+#ifdef DEBUG
 #include <twili.h>
+#endif
 #include <Common.h>
 
 extern u32 __nx_applet_type;
@@ -35,22 +37,35 @@ extern "C"
 		fsdevMountSdmc();
 	}
 }
-
-
-GUIMain *gmain;
-map<string,int> settings; 
+GUIMain::Ref gmain;
+map<string, int> settings;
 bool loop_exit = false;
-
 void RunGame(OnsGameInfo *info)
 {
 	WriteConfig();
+	if (CheckFile("sdmc:/onsemu/exefs/ONScripter.nro") < 0)
+	{
+		gmain->CreateShowDialog(text["msg_not_found"], "", {text["msg_yes"]}, false);
+		return;
+	}
+
 	int opt = gmain->CreateShowDialog(text["msg_tip_run"], "", {text["msg_run"], text["msg_no"]}, true); // (using latest option as cancel option)
-	if(opt==0){
+	if (opt == 0)
+	{
 		printf("Run Game :%s\n", info->GetPath().c_str());
+		string setting = "0";
+		if (!settings["fontoutline"] && settings["fullscreen"])
+			setting = "1";
+		else if (settings["fontoutline"] && !settings["fullscreen"])
+			setting = "2";
+		else if (settings["fontoutline"] && settings["fullscreen"])
+			setting = "3";
+		
+
 		/*RUN game*/
-		envSetNextLoad("sdmc:/onsemu/ONS.nro", (string(DATA_PATH) + " " + info->GetPath() + " " + (settings["fullscreen"]==1?"1":"0")).c_str());
+		envSetNextLoad("sdmc:/onsemu/exefs/ONScripter.nro", (string(DATA_PATH) + " " + info->GetPath() + " " + setting).c_str());
 		//info->SetStartTime(GetCurrentDate() + " " + GetCurrentTime());
-		gmain->Close();
+		//gmain->Close();
 		loop_exit = true;
 	}
 	/*Write StartUp Info*/
@@ -64,8 +79,9 @@ void RunGame(OnsGameInfo *info)
 static void *ghaddr;
 int main(int argc, char *argv[])
 {
-
+#ifdef DEBUG
 	twiliInitialize();
+#endif
 	srand(time(NULL));
 
 	if (R_FAILED(svcSetHeapSize(&ghaddr, 0x10000000)))
@@ -95,26 +111,20 @@ int main(int argc, char *argv[])
 	if (R_FAILED(nifmInitialize()))
 		printf("nifm error!\n");
 
-
-
 	//argv[0] = (char*)"sdmc:/onsemu/hanchan/arc.nsa";
 	//nsadec_main(argv[0]);
 	WriteData();
 	WriteConfig(true);
 	LoadConfig();
 	LoadLanguage(settings["language"]);
-	gmain = new GUIMain();
+	gmain = GUIMain::New();
 	gmain->Show();
 	while (true)
 	{
-		SDL_Delay(20);
-		if (loop_exit){
-			gmain->Close();
+		SDL_Delay(100);
+		if (loop_exit)
 			break;
-		}
 	}
-	//gmain->Close();
-	delete gmain;
 	//envSetNextLoad("sdmc:/onsemu/ONScripter.nro", "sdmc:/onsemu/ONScripter.nro test233sdmc:/onsemu/ONScripter.nro");
 	nifmExit();
 	bpcExit();
@@ -128,7 +138,8 @@ int main(int argc, char *argv[])
 	hidExit();
 	appletExit();
 	svcSetHeapSize(&ghaddr, ((u8 *)envGetHeapOverrideAddr() + envGetHeapOverrideSize()) - (u8 *)ghaddr);
+#ifdef DEBUG
 	twiliExit();
-
+#endif
 	return 0;
 }

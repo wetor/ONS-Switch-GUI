@@ -9,6 +9,8 @@ namespace pu::ui::elm
         this->halign = HorizontalAlign::Left;
         this->valign = VerticalAlign::Up;
         this->parent = NULL;
+        //----
+        this->disable = false;
     }
 
     Element::~Element()
@@ -24,7 +26,15 @@ namespace pu::ui::elm
     {
         this->visible = Visible;
     }
+    bool Element::IsDisable()
+    {
+        return this->disable;
+    }
 
+    void Element::SetDisable(bool Disable)
+    {
+        this->disable = Disable;
+    }
     void Element::SetParent(void *Base)
     {
         this->parent = Base;

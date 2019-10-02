@@ -10,7 +10,7 @@ void LoadLanguage(int lang)
 	{
 	case 0:
 		text["language"] = "简体中文";
-		text["version"] = "内测 0.1";
+		text["version"] = "1.0";
 
 		text["license"] = "ONS GameBrowser  created by wetor (http://www.wetor.top)";
 		text["txt_version"] = "版本:";
@@ -30,6 +30,7 @@ void LoadLanguage(int lang)
 		text["msg_run"] = "开始游戏";
 		text["msg_yes"] = "确定";
 		text["msg_no"] = "取消";
+		text["msg_not_found"] = "未找到\"/onsemu/exefs/ONScripter.nro\"主程序！";
 
 		text["help_title"] = "游戏中操作帮助";
 		text["help_A"] = "确定选中项、下一页";
@@ -57,12 +58,13 @@ void LoadLanguage(int lang)
 		text["setting_text_down"] = "下方";
 		text["setting_game"] = "游戏设置";
 		text["setting_fullscreen"] = "全屏模式：";
+		text["setting_fontoutline"] = "文字描边：";
 
 		break;
 	case 1:
 	default:
 		text["language"] = "English";
-		text["version"] = "alpha 0.1";
+		text["version"] = "1.0";
 		text["license"] = "ONS GameBrowser  created by wetor (http://www.wetor.top)";
 
 		text["txt_version"] = "Version:";
@@ -109,6 +111,9 @@ void LoadLanguage(int lang)
 		text["setting_text_down"] = "Bottom";
 		text["setting_game"] = "Game Setting";
 		text["setting_fullscreen"] = "FullScreen: ";
+		text["setting_fontoutline"] = "Font Outline: ";
+
+		text["msg_not_found"] = "\"/onsemu/exefs/ONScripter.nro\" not found!";
 
 		/*
 	
@@ -337,13 +342,15 @@ void WriteData()
 
 	if (!CheckDir(PATH))
 		CreateDir(PATH);
+	if (!CheckDir(EXEPATH))
+		CreateDir(EXEPATH);
 	if (!CheckDir(TEMP_PATH))
 		CreateDir(TEMP_PATH);
 	if (!CheckDir(DATA_PATH))
 		CreateDir(DATA_PATH);
 	string path = DATA_PATH;
 	path += "/";
-	for (int i = 0; i < 18; i++)
+	for (int i = 0; i < 17; i++)
 	{
 		if (CheckFile(path + onsdata[i].name) != (int)onsdata[i].len)
 		{
@@ -434,10 +441,12 @@ void WriteConfig(bool default0)
 		gui.add("iconstyle", Setting::TypeInt) = 0;
 		gui.add("lastselect", Setting::TypeInt) = 0;
 		Setting &game = root.add("game", Setting::TypeGroup);
-		game.add("fullscreen", Setting::TypeInt) = 1;
-
+		game.add("fullscreen", Setting::TypeInt) = 0;
+		game.add("fontoutline", Setting::TypeInt) = 0;
 		cfg.writeFile(fn.c_str());
+#ifdef DEBUG
 		printf("init setting: version:%d\n", GUI_VERSION);
+#endif
 	}
 	else
 	{
@@ -452,6 +461,7 @@ void WriteConfig(bool default0)
 		gui.add("lastselect", Setting::TypeInt) = settings["lastselect"];
 		Setting &game = root.add("game", Setting::TypeGroup);
 		game.add("fullscreen", Setting::TypeInt) = settings["fullscreen"];
+		game.add("fontoutline", Setting::TypeInt) = settings["fontoutline"];
 
 		cfg.writeFile(fn.c_str());
 		//printf("save setting: language:%d darkmode:%d iconstyle:%d fullscreen:%d\n", settings["language"], settings["darkmode"], settings["iconstyle"], settings["fullscreen"]);
@@ -473,6 +483,7 @@ void LoadConfig()
 	gui.lookupValue("iconstyle", settings["iconstyle"]);
 	gui.lookupValue("lastselect", settings["lastselect"]);
 	game.lookupValue("fullscreen", settings["fullscreen"]);
+	game.lookupValue("fontoutline", settings["fontoutline"]);
 	//printf("load setting: language:%d darkmode:%d iconstyle:%d fullscreen:%d\n", settings["language"], settings["darkmode"], settings["iconstyle"], settings["fullscreen"]);
 }
 #define SKIP_SPACE(p)                   \
@@ -483,8 +494,8 @@ void LoadConfig()
 
 void PreLoadScreen(char *script_buffer, int script_buffer_length, int &screen_width, int &screen_height)
 {
-	screen_width  = 640;
-    screen_height = 480;
+	screen_width = 640;
+	screen_height = 480;
 	int variable_range = 4096;
 	int global_variable_border = 200;
 
@@ -592,8 +603,8 @@ void PreLoadScreen(char *script_buffer, int script_buffer_length, int &screen_wi
 void PreLoadScript(string path, script_t &info)
 {
 
-	if(CheckFile(path+"/title.txt")>0){
-
+	if (CheckFile(path + "/title.txt") > 0)
+	{
 	}
 
 	vector<string> files;
@@ -737,7 +748,6 @@ void PreLoadScript(string path, script_t &info)
 
 	fclose(fp);
 	delete[] tmp_script_buf;
-
 	//printf("%s\n", string(path + "/" + script_file).c_str());
 	//printf("script length:%d\n", script_buffer.length());
 	PreLoadScreen((char *)script_buffer.c_str(), script_buffer.length(), info.w, info.h);

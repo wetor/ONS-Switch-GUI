@@ -33,6 +33,9 @@ namespace pu::ui::render
             void RenderTexture(NativeTexture Texture, s32 X, s32 Y, int AlphaMod = -1);
             void RenderTextureScaled(NativeTexture Texture, s32 X, s32 Y, s32 Width, s32 Height, int AlphaMod = -1);
             void RenderRectangle(Color Color, s32 X, s32 Y, s32 Width, s32 Height);
+
+            void RenderRectangleEx(Color Color, s32 X, s32 Y, u32 Width, u32 Height, u32 land);
+
             void RenderRectangleFill(Color Color, s32 X, s32 Y, s32 Width, s32 Height);
             void RenderRoundedRectangle(Color Color, s32 X, s32 Y, s32 Width, s32 Height, s32 Radius);
             void RenderRoundedRectangleFill(Color Color, s32 X, s32 Y, s32 Width, s32 Height, s32 Radius);

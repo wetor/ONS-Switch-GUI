@@ -114,7 +114,40 @@ namespace pu::ui::render
         SDL_SetRenderDrawColor(purend, Color.R, Color.G, Color.B, alpha);
         SDL_RenderDrawRect(purend, &rect);
     }
+    void Renderer::RenderRectangleEx(Color Color, s32 X, s32 Y, u32 Width, u32 Height, u32 land)
+	{
+		SDL_Rect rect[4];
+		//top
+		rect[0].x = X + this->basex;
+		rect[0].y = Y + this->basey;
+		rect[0].w = Width;
+		rect[0].h = land;
 
+		//left
+		rect[1].x = X + this->basex;
+		rect[1].y = Y + this->basey + land;
+		rect[1].w = land;
+		rect[1].h = Height - land * 2;
+
+		//bottom
+		rect[2].x = X + this->basex;
+		rect[2].y = Y + this->basey + Height - land;
+		rect[2].w = Width;
+		rect[2].h = land;
+
+
+		//right
+		rect[3].x = X + this->basex + Width - land;
+		rect[3].y = Y + this->basey + land;
+		rect[3].w = land;
+		rect[3].h = Height - land * 2;
+
+
+		u8 alpha = Color.A;
+		if (this->basea >= 0) alpha = (u8)this->basea;
+		SDL_SetRenderDrawColor(purend, Color.R, Color.G, Color.B, alpha);
+		SDL_RenderFillRects(purend, rect, 4);
+	}
     void Renderer::RenderRectangleFill(Color Color, s32 X, s32 Y, s32 Width, s32 Height)
     {
         SDL_Rect rect;

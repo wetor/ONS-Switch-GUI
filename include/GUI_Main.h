@@ -17,26 +17,27 @@ enum CURR_LAYOUT{
 };
 
 
-class GUIMain : public pu::Application
+class GUIMain : public pu::ui::Application
 {
 public:
 	GUIMain();
+	PU_SMART_CTOR(GUIMain)
 	void Update();
 	void OnInput(u64 Down, u64 Up, u64 Held, bool Touch);
 private:
-	pu::element::Rectangle *battery_bar;
-	pu::element::Rectangle *battery_rect;
+	pu::ui::elm::Rectangle::Ref battery_bar;
+	pu::ui::elm::Rectangle::Ref battery_rect;
 
-	pu::element::TextBlock *time_text;
-	pu::element::TextBlock *battery_text;
+	pu::ui::elm::TextBlock::Ref time_text;
+	pu::ui::elm::TextBlock::Ref battery_text;
 
-	pu::element::TextBlock *license_text;
+	pu::ui::elm::TextBlock::Ref license_text;
 
-	pu::draw::Color bg_color;
+	pu::ui::Color bg_color;
 
 	// Layout instance
 	CURR_LAYOUT curr_layout;
-	WindowLayout *window_layout;
-	PlayerLayout *player_layout;
+	WindowLayout::Ref window_layout;
+	PlayerLayout* player_layout;
 };
 

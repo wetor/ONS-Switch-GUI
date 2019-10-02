@@ -41,6 +41,10 @@ namespace pu::ui::elm
             void SetOnClick(std::function<void()> ClickCallback);
             void OnRender(render::Renderer::Ref &Drawer, s32 X, s32 Y);
             void OnInput(u64 Down, u64 Up, u64 Held, bool Touch);
+            //-----
+            void OnClick();
+            Color GetTextColor();
+            void SetTextColor(Color Color);
         private:
             s32 x;
             s32 y;
@@ -48,6 +52,7 @@ namespace pu::ui::elm
             s32 h;
             render::NativeFont fnt;
             Color clr;
+            Color textclr;
             String cnt;
             std::function<void()> clickcb;
             bool hover;
