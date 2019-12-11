@@ -407,7 +407,7 @@ void MenuEX::OnRender(render::Renderer::Ref &Drawer, s32 X, s32 Y)
 			if (nb < 0)
 				nb = 0;
 			Color nclr(nr, ng, nb, this->clr.A);
-            auto loadedidx = i - this->fisel;
+            auto loadedidx = i;
             auto curname = this->loadednames[loadedidx];
             auto curicon = this->loadedicons[loadedidx];
 			//if (this->isel == i) //select into
@@ -1023,7 +1023,7 @@ void MenuEX::ReloadItemRenders()
         its = this->itms.size();
     if ((its + this->fisel) > this->itms.size())
         its = this->itms.size() - this->fisel;
-    for (s32 i = this->fisel; i < (its + this->fisel); i++)
+    for (s32 i = 0; i < this->itms.size(); i++)
     {
         auto strname = this->itms[i]->GetName();
         auto tex = render::RenderText(this->font, strname, this->itms[i]->GetColor());

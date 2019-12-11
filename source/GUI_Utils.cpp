@@ -10,7 +10,7 @@ void LoadLanguage(int lang)
 	{
 	case 0:
 		text["language"] = "简体中文";
-		text["version"] = "1.0";
+		text["version"] = "1.1";
 
 		text["license"] = "ONS GameBrowser  created by wetor (http://www.wetor.top)";
 		text["txt_version"] = "版本:";
@@ -64,7 +64,7 @@ void LoadLanguage(int lang)
 	case 1:
 	default:
 		text["language"] = "English";
-		text["version"] = "1.0";
+		text["version"] = "1.1";
 		text["license"] = "ONS GameBrowser  created by wetor (http://www.wetor.top)";
 
 		text["txt_version"] = "Version:";

@@ -63,7 +63,7 @@ void RunGame(OnsGameInfo *info)
 		
 
 		/*RUN game*/
-		envSetNextLoad("sdmc:/onsemu/exefs/ONScripter.nro", (string(DATA_PATH) + " " + info->GetPath() + " " + setting).c_str());
+		envSetNextLoad("sdmc:/onsemu/exefs/ONScripter.nro", (string(DATA_PATH) + " \"" + info->GetPath() + "\" " + setting).c_str());
 		//info->SetStartTime(GetCurrentDate() + " " + GetCurrentTime());
 		//gmain->Close();
 		loop_exit = true;
