@@ -11,9 +11,9 @@ OnsGameInfo::OnsGameInfo(string path)
 #ifdef DEBUG
 	printf("Found Game!   Path:%s\t\tfind script:%s\t\ticon num:%d\n", game_path.c_str(), complete ? "YES" : "NO", (int)icon_path.size());
 #endif
-	temp_path = string(TEMP_PATH) + "/" + name;
-	if (!CheckDir(temp_path))
-		CreateDir(temp_path);
+	// temp_path = string(TEMP_PATH) + "/" + name;
+	// if (!CheckDir(temp_path))
+	// 	CreateDir(temp_path);
 	//PreLoadScript(path,script_info);
 #ifdef DEBUG
 	if(script_info.caption!=""){

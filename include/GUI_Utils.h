@@ -24,26 +24,26 @@
 
 #include "GUI_define.h"
 #include "GUI_GameInfo.h"
-#include "default_icon_png.h"
+//#include "default_icon_png.h"
 //#include "default_font_ttf.h"
 
 
-#include "A_png.h"
-#include "B_png.h"
-#include "X_png.h"
-#include "Y_png.h"
-#include "SL_png.h"
-#include "SR_png.h"
-#include "L_png.h"
-#include "R_png.h"
-#include "ZL_png.h"
-#include "ZR_png.h"
-#include "PLUS_png.h"
-#include "MINUS_png.h"
-#include "LEFT_png.h"
-#include "UP_png.h"
-#include "RIGHT_png.h"
-#include "DOWN_png.h"
+// #include "A_png.h"
+// #include "B_png.h"
+// #include "X_png.h"
+// #include "Y_png.h"
+// #include "SL_png.h"
+// #include "SR_png.h"
+// #include "L_png.h"
+// #include "R_png.h"
+// #include "ZL_png.h"
+// #include "ZR_png.h"
+// #include "PLUS_png.h"
+// #include "MINUS_png.h"
+// #include "LEFT_png.h"
+// #include "UP_png.h"
+// #include "RIGHT_png.h"
+// #include "DOWN_png.h"
 
 using namespace std;
 using namespace libconfig;
@@ -52,28 +52,26 @@ extern map<string, string> text;	//language
 extern map<string,int> settings; 
 
 struct data_t {
-	uint8_t * data;
-	uint32_t len;
 	string name;
 };
 static data_t onsdata[]{
-	{(uint8_t*)A_png,A_png_size, "A.png"},
-	{(uint8_t*)B_png,B_png_size ,"B.png"},
-	{(uint8_t*)X_png,X_png_size, "X.png"},
-	{(uint8_t*)Y_png,Y_png_size, "Y.png"},
-	{(uint8_t*)SL_png,SL_png_size, "SL.png"},
-	{(uint8_t*)SR_png,SR_png_size ,"SR.png"},
-	{(uint8_t*)L_png,L_png_size ,"L.png"},
-	{(uint8_t*)R_png,R_png_size, "R.png"},
-	{(uint8_t*)ZL_png,ZL_png_size, "ZL.png"},
-	{(uint8_t*)ZR_png,ZR_png_size ,"ZR.png"},
-	{(uint8_t*)PLUS_png,PLUS_png_size,"PLUS.png" },
-	{(uint8_t*)MINUS_png,MINUS_png_size, "MINUS.png"},
-	{(uint8_t*)LEFT_png,LEFT_png_size,"LEFT.png" },
-	{(uint8_t*)UP_png,UP_png_size, "UP.png"},
-	{(uint8_t*)RIGHT_png,RIGHT_png_size, "RIGHT.png"},
-	{(uint8_t*)DOWN_png,DOWN_png_size ,"DOWN.png"},
-	{(uint8_t*)default_icon_png,default_icon_png_size,"default_icon.png"},
+	{"A.png"},
+	{"B.png"},
+	{"X.png"},
+	{"Y.png"},
+	{"SL.png"},
+	{"SR.png"},
+	{"L.png"},
+	{"R.png"},
+	{"ZL.png"},
+	{"ZR.png"},
+	{"PLUS.png" },
+	{"MINUS.png"},
+	{"LEFT.png" },
+	{"UP.png"},
+	{"RIGHT.png"},
+	{"DOWN.png"},
+	{"default_icon.png"},
 	//{(uint8_t*)default_font_ttf,default_font_ttf_size,"default_font.ttf"}
 };
 
@@ -107,7 +105,7 @@ enum LANGUAGE{
 
 
 extern bool loop_exit;
-
+extern bool loop_restart;
 extern void RunGame(OnsGameInfo *info);
 
 
@@ -130,8 +128,7 @@ extern string GetExtensions(string path);
 extern bool CopyFile(string Source, string Dest);
 extern bool CreateDir(string path);
 extern bool WriteFile(string path, uint8_t *data, int len);
-
-extern void WriteData();
+extern void CreateDirs();
 
 
 extern string GetCurrentTime(bool second = false);

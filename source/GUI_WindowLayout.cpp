@@ -201,7 +201,7 @@ WindowLayout::WindowLayout()
 	this->Add(image);
 	button = pu::ui::elm::Button::New(x + BUTTON_HEIGHT, y, (settings["language"] == English ? BUTTON_WIDTH : BUTTON_WIDTH / 2), BUTTON_HEIGHT, text["btn_refresh"], pu::ui::Color(0, 0, 0, 255), pu::ui::Color(255, 255, 255, 0));
 	button->SetOnClick([&] {
-		loop_exit = true;
+		loop_restart = true;
 		WriteConfig();
 	});
 	this->Add(button);
@@ -273,7 +273,7 @@ WindowLayout::WindowLayout()
 			settings["language"] = Chinese;
 		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[SETTING::LANGUAGE]])->SetContent(text["setting_language"] + text["language"]);
 		WriteConfig();
-		loop_exit = true;
+		loop_restart = true;
 	});
 	this->Add(button);
 	setting_index[SETTING::LANGUAGE] = setting_elms.size();
@@ -285,7 +285,7 @@ WindowLayout::WindowLayout()
 		settings["darkmode"] = !settings["darkmode"];
 		pu::ui::elm::Element::Conv<pu::ui::elm::Button>(setting_elms[setting_index[SETTING::DARKMODE]])->SetContent(text["setting_darkmode"] + (settings["darkmode"] ? text["on"] : text["off"]));
 		WriteConfig();
-		loop_exit = true;
+		loop_restart = true;
 	});
 	this->Add(button);
 	setting_index[SETTING::DARKMODE] = setting_elms.size();

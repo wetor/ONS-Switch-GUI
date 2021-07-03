@@ -33,7 +33,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 
 APP_TITLE := ONS Browser
 APP_AUTHOR := Wetor
-APP_VERSION := 1.1
+APP_VERSION := 2.0
 
 # ICON := Icon.jpg
 TARGET		:=	ONSBrowser
@@ -42,7 +42,7 @@ SOURCES		:=	source ../ONScripter-Switch/source/reader
 DATA		:=	data
 INCLUDES	:=	include Plutonium_v2/Plutonium/Include ../ONScripter-Switch/include
 EXEFS_SRC	:=	exefs_src
-# ROMFS		:=	RomFs
+ROMFS		:=	romfs
 ICON		:= Icon.jpg
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -52,7 +52,7 @@ ARCH	:=	-march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES) $(CFLAGS)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DSWITCH -DDEBUG
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DSWITCH
 
 CXXFLAGS	:= $(CFLAGS) -fexceptions -fpermissive  -std=gnu++11
 
@@ -63,7 +63,7 @@ LIBS	:= -lconfig++ \
 		-lpu -lfreetype -lSDL2_mixer -lopusfile -lopus \
 		-lmodplug -lmpg123 -lvorbisidec -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2 \
 		-lEGL -lGLESv2 -lglapi -ldrm_nouveau -lwebp -lpng -ljpeg \
-		`sdl2-config --libs` `freetype-config --libs` -ltwili -lnx
+		`sdl2-config --libs` `freetype-config --libs` -lnx
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

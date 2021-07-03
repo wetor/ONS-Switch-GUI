@@ -37,7 +37,7 @@ public:
 private:
 	bool complete;
 	string game_path;
-	string temp_path;
+	// string temp_path;
 	string name;
 	string cmd;
 	vector<string> icon_path;

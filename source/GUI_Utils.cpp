@@ -10,9 +10,9 @@ void LoadLanguage(int lang)
 	{
 	case 0:
 		text["language"] = "简体中文";
-		text["version"] = "1.1";
+		text["version"] = "2.0";
 
-		text["license"] = "ONS GameBrowser  created by wetor (http://www.wetor.top)";
+		text["license"] = "ONS GameBrowser  created by wetor (http://blog.wetorx.cn)";
 		text["txt_version"] = "版本:";
 		text["btn_help"] = "游戏帮助";
 		text["btn_ok"] = "确认/开始";
@@ -21,7 +21,7 @@ void LoadLanguage(int lang)
 		text["btn_res"] = "资源查看";
 		text["btn_player"] = "播放器";
 		text["btn_setting"] = "设置";
-		text["btn_refresh"] = "重载";
+		text["btn_refresh"] = "退出";
 		text["txt_nogame"] = "未发现ONS游戏！请将ONS游戏文件夹放至储存卡的\"/onsemu\"文件夹中。";
 		text["msg_title_tip"] = "提示";
 		text["msg_title_error"] = "错误";
@@ -31,6 +31,7 @@ void LoadLanguage(int lang)
 		text["msg_yes"] = "确定";
 		text["msg_no"] = "取消";
 		text["msg_not_found"] = "未找到\"/onsemu/exefs/ONScripter.nro\"主程序！";
+		text["msg_not_found_self"] = "当前GUI需要放在\"/onsemu/exefs/ONSBrowser.nro\"！";
 
 		text["help_title"] = "游戏中操作帮助";
 		text["help_A"] = "确定选中项、下一页";
@@ -64,8 +65,8 @@ void LoadLanguage(int lang)
 	case 1:
 	default:
 		text["language"] = "English";
-		text["version"] = "1.1";
-		text["license"] = "ONS GameBrowser  created by wetor (http://www.wetor.top)";
+		text["version"] = "2.0";
+		text["license"] = "ONS GameBrowser  created by wetor (http://blog.wetorx.cn)";
 
 		text["txt_version"] = "Version:";
 		text["btn_help"] = "Help";
@@ -75,7 +76,7 @@ void LoadLanguage(int lang)
 		text["btn_res"] = "Resource";
 		text["btn_player"] = "Player";
 		text["btn_setting"] = "Setting";
-		text["btn_refresh"] = "Refresh";
+		text["btn_refresh"] = "Exit";
 		text["txt_nogame"] = "Not found ONS-Game. Please put ONS-Game-Directory in \"sdmc:/onsemu/\".";
 		text["msg_title_tip"] = "Tips";
 		text["msg_title_error"] = "Error";
@@ -113,7 +114,8 @@ void LoadLanguage(int lang)
 		text["setting_fullscreen"] = "FullScreen: ";
 		text["setting_fontoutline"] = "Font Outline: ";
 
-		text["msg_not_found"] = "\"/onsemu/exefs/ONScripter.nro\" not found!";
+		text["msg_not_found"] = "\"/onsemu/exefs/ONScripter.nro\" Not Found!";
+		text["msg_not_found_self"] = "The current GUI program should be moved to \"/onsemu/exefs/ONSBrowser.nro\"！";
 
 		/*
 	
@@ -337,27 +339,13 @@ bool WriteFile(string path, uint8_t *data, int len)
 	fclose(of);
 	return true;
 }
-void WriteData()
+void CreateDirs()
 {
-
 	if (!CheckDir(PATH))
 		CreateDir(PATH);
 	if (!CheckDir(EXEPATH))
 		CreateDir(EXEPATH);
-	if (!CheckDir(TEMP_PATH))
-		CreateDir(TEMP_PATH);
-	if (!CheckDir(DATA_PATH))
-		CreateDir(DATA_PATH);
-	string path = DATA_PATH;
-	path += "/";
-	for (int i = 0; i < 17; i++)
-	{
-		if (CheckFile(path + onsdata[i].name) != (int)onsdata[i].len)
-		{
-			WriteFile(path + onsdata[i].name, onsdata[i].data, onsdata[i].len);
-			cout << path + onsdata[i].name << endl;
-		}
-	}
+
 }
 
 string GetCurrentTime(bool second)
@@ -414,7 +402,7 @@ bool IsCharging()
 
 void WriteConfig(bool default0)
 {
-	string fn = string(DATA_PATH) + "/setting.txt";
+	string fn = string(EXEPATH) + "/setting.txt";
 
 	if (default0)
 	{
@@ -469,7 +457,7 @@ void WriteConfig(bool default0)
 }
 void LoadConfig()
 {
-	string fn = string(DATA_PATH) + "/setting.txt";
+	string fn = string(EXEPATH) + "/setting.txt";
 	if (CheckFile(fn) < 0)
 		exit(0);
 	Config cfg;				  //1.声明 Config对象

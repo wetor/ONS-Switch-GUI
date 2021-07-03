@@ -1,4 +1,4 @@
-#define     GUI_VERSION         20
+#define     GUI_VERSION         30
 
 
 #define		SCREEN_WIDTH		1280
@@ -35,12 +35,13 @@
 //     1   2   3    4    5   6   7
 //
 
-#define		TEMP_PATH			"sdmc:/onsemu/temp"
+// #define		TEMP_PATH			"sdmc:/onsemu/temp"
 #define		PATH				"sdmc:/onsemu"
 #define		EXEPATH				"sdmc:/onsemu/exefs"
-#define		DATA_PATH			"sdmc:/onsemu/onsdata"
-#define		DEFAULT_ICON		"sdmc:/onsemu/onsdata/default_icon.png"
-#define		DEFAULT_FONT		"sdmc:/onsemu/onsdata/default_font.ttf"
-
-#define		CONFIG				"sdmc:/onsemu/onsdata/config.cfg"
+#define     ONS_PATH            "sdmc:/onsemu/exefs/ONScripter.nro"
+#define     ONSB_PATH           "sdmc:/onsemu/exefs/ONSBrowser.nro"
+#define		DATA_PATH			"romfs:/image"
+#define		DEFAULT_ICON		"romfs:/default_icon.png"
+// #define		DEFAULT_FONT		"romfs:/default_font.ttf"
+#define		CONFIG				"sdmc:/onsemu/exefs/config.cfg"
 #define		CMD_FILE			"startup.cfg"
