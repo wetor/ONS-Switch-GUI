@@ -341,8 +341,8 @@ ASALocalRun/
 /.fuse_hidden0000300600000005
 .vscode/settings.json
 .vscode/tasks.json
-/ONSBrowser.pfs0
-/ONSBrowser.nso
-/ONSBrowser.nro
-/ONSBrowser.nacp
-/ONSBrowser.elf
+ONSBrowser.pfs0
+ONSBrowser.nso
+ONSBrowser.nro
+ONSBrowser.nacp
+ONSBrowser.elf

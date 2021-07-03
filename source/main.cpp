@@ -3,40 +3,47 @@
 #ifdef DEBUG
 #include <twili.h>
 #endif
-#include <Common.h>
+// #include <Common.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
+extern int errno;
 
 extern u32 __nx_applet_type;
 extern char *fake_heap_end;
-extern "C"
-{
-	void __nx_win_init(void);
-	void __libnx_init_time(void);
-	void __appInit(void)
-	{
-		Result rc = smInitialize();
-		if (R_FAILED(rc))
-			fatalSimple(MAKERESULT(Module_Libnx, LibnxError_InitFail_SM));
-		rc = setsysInitialize();
-		if (R_SUCCEEDED(rc))
-		{
-			SetSysFirmwareVersion fw;
-			rc = setsysGetFirmwareVersion(&fw);
-			if (R_SUCCEEDED(rc))
-				hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
-			setsysExit();
-		}
-		rc = timeInitialize();
-		if (R_FAILED(rc))
-			fatalSimple(MAKERESULT(Module_Libnx, LibnxError_InitFail_Time));
-		__libnx_init_time();
+// extern "C"
+// {
 
-		rc = fsInitialize();
-		if (R_FAILED(rc))
-			fatalSimple(MAKERESULT(Module_Libnx, LibnxError_InitFail_FS));
+// 	void __libnx_init_time(void);
+// 	void __appInit(void)
+// 	{
+// 		Result rc = smInitialize();
+// 		if (R_FAILED(rc))
+// 			fatalThrow(MAKERESULT(Module_Libnx, LibnxError_InitFail_SM));
+// 		rc = setsysInitialize();
+// 		if (R_SUCCEEDED(rc))
+// 		{
+// 			SetSysFirmwareVersion fw;
+// 			rc = setsysGetFirmwareVersion(&fw);
+// 			if (R_SUCCEEDED(rc))
+// 				hosversionSet(MAKEHOSVERSION(fw.major, fw.minor, fw.micro));
+// 			setsysExit();
+// 		}
+// 		rc = timeInitialize();
+// 		if (R_FAILED(rc))
+// 			fatalThrow(MAKERESULT(Module_Libnx, LibnxError_InitFail_Time));
+// 		__libnx_init_time();
 
-		fsdevMountSdmc();
-	}
-}
+// 		rc = fsInitialize();
+// 		if (R_FAILED(rc))
+// 			fatalThrow(MAKERESULT(Module_Libnx, LibnxError_InitFail_FS));
+
+// 		fsdevMountSdmc();
+// 	}
+// }
 GUIMain::Ref gmain;
 map<string, int> settings;
 bool loop_exit = false;
@@ -81,40 +88,40 @@ int main(int argc, char *argv[])
 {
 #ifdef DEBUG
 	twiliInitialize();
+	twiliBindStdio();
 #endif
 	srand(time(NULL));
-
 	if (R_FAILED(svcSetHeapSize(&ghaddr, 0x10000000)))
 		exit(1);
 	fake_heap_end = (char *)ghaddr + 0x10000000;
-
 	if (R_FAILED(appletInitialize()))
 		printf("applet error!\n");
 	if (R_FAILED(hidInitialize()))
 		printf("hid error!\n");
-	if (R_FAILED(accountInitialize()))
-		printf("account error!\n");
-	if (R_FAILED(ncmInitialize()))
-		printf("ncm error!\n");
-	if (R_FAILED(nsInitialize()))
-		printf("ns error!\n");
-	if (R_FAILED(psmInitialize()))
-		printf("psm error!\n");
-	if (R_FAILED(setInitialize()))
-		printf("set error!\n");
-	if (R_FAILED(setsysInitialize()))
-		printf("setsys error!\n");
-	if (R_FAILED(splInitialize()))
-		printf("spl error!\n");
-	if (R_FAILED(bpcInitialize()))
-		printf("bpc error!\n");
-	if (R_FAILED(nifmInitialize()))
-		printf("nifm error!\n");
+	// if (R_FAILED(accountInitialize(AccountServiceType_System)))
+	// 	printf("account error!\n");
+	// if (R_FAILED(avmInitialize()))
+	// 	printf("ncm error!\n");
+	// if (R_FAILED(ncmInitialize()))
+	// 	printf("ncm error!\n");
+	// if (R_FAILED(nsInitialize()))
+	// 	printf("ns error!\n");
+	// if (R_FAILED(psmInitialize()))
+	// 	printf("psm error!\n");
+	// if (R_FAILED(setInitialize()))
+	// 	printf("set error!\n");
+	// if (R_FAILED(setsysInitialize()))
+	// 	printf("setsys error!\n");
+	// if (R_FAILED(nifmInitialize(NifmServiceType_User)))
+	// 	printf("nifm error!\n");
+
 
 	//argv[0] = (char*)"sdmc:/onsemu/hanchan/arc.nsa";
 	//nsadec_main(argv[0]);
+	printf("hello world\n");
 	WriteData();
 	WriteConfig(true);
+	printf("write over\n");
 	LoadConfig();
 	LoadLanguage(settings["language"]);
 	gmain = GUIMain::New();
@@ -126,15 +133,16 @@ int main(int argc, char *argv[])
 			break;
 	}
 	//envSetNextLoad("sdmc:/onsemu/ONScripter.nro", "sdmc:/onsemu/ONScripter.nro test233sdmc:/onsemu/ONScripter.nro");
-	nifmExit();
-	bpcExit();
-	splExit();
-	setsysExit();
-	setExit();
-	psmExit();
-	nsExit();
-	ncmExit();
-	accountExit();
+	// nifmExit();
+	// bpcExit();
+	// splExit();
+	// setsysExit();
+	// setExit();
+	// psmExit();
+	// nsExit();
+	// avmExit();
+	// ncmExit();
+	// accountExit();
 	hidExit();
 	appletExit();
 	svcSetHeapSize(&ghaddr, ((u8 *)envGetHeapOverrideAddr() + envGetHeapOverrideSize()) - (u8 *)ghaddr);

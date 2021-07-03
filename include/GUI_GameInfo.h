@@ -10,8 +10,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
-#include "SarReader.h"
-#include "NsaReader.h"
+
 
 
 using namespace std;

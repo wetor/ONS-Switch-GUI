@@ -52,7 +52,7 @@ ARCH	:=	-march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES) $(CFLAGS)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DSWITCH 
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DSWITCH -DDEBUG
 
 CXXFLAGS	:= $(CFLAGS) -fexceptions -fpermissive  -std=gnu++11
 
@@ -63,7 +63,7 @@ LIBS	:= -lconfig++ \
 		-lpu -lfreetype -lSDL2_mixer -lopusfile -lopus \
 		-lmodplug -lmpg123 -lvorbisidec -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2 \
 		-lEGL -lGLESv2 -lglapi -ldrm_nouveau -lwebp -lpng -ljpeg \
-		`sdl2-config --libs` `freetype-config --libs` -lnx
+		`sdl2-config --libs` `freetype-config --libs` -ltwili -lnx
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

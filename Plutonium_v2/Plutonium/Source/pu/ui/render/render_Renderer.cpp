@@ -14,19 +14,26 @@ namespace pu::ui::render
         {
             Result rc = romfsInit();
             this->okromfs = (rc == 0);
-            plInitialize();
-            SDL_Init(SdlFlags);
+            plInitialize(PlServiceType_User);
+            int res = SDL_Init(SdlFlags);
+            printf("err1 %s\n",SDL_GetError());
             this->rendwd = SDL_CreateWindow("Plutonium", 0, 0, 1280, 720, 0);
+            printf("err2 %s\n",SDL_GetError());
             u32 flags = SDL_RENDERER_SOFTWARE;
             if(RenderAccel) flags = (SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
             purend = SDL_CreateRenderer(this->rendwd, -1, flags);
+            printf("err3 %s",SDL_GetError());
             this->rendsf = SDL_GetWindowSurface(this->rendwd);
+            printf(SDL_GetError());
             SDL_SetRenderDrawBlendMode(purend, SDL_BLENDMODE_BLEND);
+            printf(SDL_GetError());
             SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+            printf(SDL_GetError());
             IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_TIF | IMG_INIT_WEBP);
             TTF_Init();
             Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG);
             Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
+            printf(SDL_GetError());
             this->initialized = true;
             this->basea = -1;
             this->basex = 0;

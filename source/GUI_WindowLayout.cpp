@@ -14,7 +14,6 @@ WindowLayout::WindowLayout()
 	{
 		text_color = pu::ui::Color(0, 0, 0, 255);
 	}
-
 	menu_elms.clear();
 	help_elms.clear();
 	setting_elms.clear();

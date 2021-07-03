@@ -6,7 +6,7 @@ using namespace std;
 窗口初始化
 全局按键设置
  */
-GUIMain::GUIMain()
+GUIMain::GUIMain():Application(SDL_INIT_EVERYTHING,false)
 {
 
 	if (settings["darkmode"])
@@ -87,6 +87,7 @@ GUIMain::GUIMain()
 
 	curr_layout = CURR_LAYOUT::WINDOW;
 	this->LoadLayout(window_layout);
+	printf("初始化\n");
 }
 void GUIMain::OnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 {
@@ -111,19 +112,23 @@ void GUIMain::OnInput(u64 Down, u64 Up, u64 Held, bool Touch)
 	default:
 		break;
 	}
+	
 	//reload
 	if (Down & KEY_MINUS)
 	{
+		printf("按下-\n");
 		//this->Close();
 		loop_exit = true;
 	}
 	else if (Down & KEY_X) // If A is pressed, start with our dialog questions!
 	{
+		printf("按下X\n");
 		this->CreateShowDialog("Unrealized", "未实现的功能", {"OK..."}, false); // (using latest option as cancel option)
 
 	}
 	else if (Down & KEY_Y) // If A is pressed, start with our dialog questions!
 	{
+		printf("按下Y\n");
 		this->CreateShowDialog("Unrealized", "未实现的功能", {"OK..."}, false); // (using latest option as cancel option)
 
 	}
