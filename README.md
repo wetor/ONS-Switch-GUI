@@ -1,3 +1,6 @@
+# 最新版已内置游戏浏览器 https://github.com/wetor/ONScripter-jh-Switch
+感谢 [pengcai6](https://github.com/pengcai6) 的贡献
+
 # ONS-Switch-GUI
 ONS-Switch-GUI
 
